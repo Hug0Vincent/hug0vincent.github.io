@@ -3,36 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://192.168.0.24:8000/2018/11/who-am-i/</loc>
+    <loc>https://hug0vincent.github.io/2018/11/who-am-i/</loc>
     <lastmod>2018-11-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://192.168.0.24:8000/categories/about/</loc>
-    <lastmod>2018-11-24T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://192.168.0.24:8000/categories/</loc>
+    <loc>https://hug0vincent.github.io/categories/about/</loc>
     <lastmod>2018-11-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://192.168.0.24:8000/</loc>
+    <loc>https://hug0vincent.github.io/categories/</loc>
     <lastmod>2018-11-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://192.168.0.24:8000/post/</loc>
+    <loc>https://hug0vincent.github.io/</loc>
     <lastmod>2018-11-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://192.168.0.24:8000/tags/</loc>
+    <loc>https://hug0vincent.github.io/post/</loc>
+    <lastmod>2018-11-24T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://hug0vincent.github.io/tags/</loc>
     <priority>0</priority>
   </url>
   
