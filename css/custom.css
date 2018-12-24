@@ -1,6 +1,6 @@
 .rootme_logo {
     background-image: url('/logos/rootme.png');
     background-position: center;
-    background-attachment: fixed;
-    background-size: contain
+    background-repeat: no-repeat;
+    background-size: 90%
 }
