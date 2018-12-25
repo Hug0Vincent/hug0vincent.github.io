@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en-en">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="Hugo VINCENT">
+<meta name="keywords" content="forensic, crypto, blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
+<meta name="description" content="Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.">
+
+
+<meta property="og:description" content="Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mission impossible 1">
+<meta name="twitter:title" content="Mission impossible 1">
+<meta property="og:url" content="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+<meta property="twitter:url" content="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+<meta property="og:site_name" content="Hugo">
+<meta property="og:description" content="Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.">
+<meta name="twitter:description" content="Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2018-12-20T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2018-12-20T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="write-ups">
+    
+      <meta property="article:section" content="santhacklausctf">
+    
+  
+  
+    
+      <meta property="article:tag" content="forensic">
+    
+      <meta property="article:tag" content="crypto">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/mi1/bg.png">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/mi1/bg.png">
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/profil.jpg">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/profil.jpg">
+
+
+    <title>Mission impossible 1</title>
+
+    <link rel="icon" href="https://hug0vincent.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet"> 
+
+    
+    <link rel="stylesheet" href="https://hug0vincent.github.io/css/style-2wfjlq5nwe9qjygqo9yarila7qvjwdmv.min.css" />
+    
+    
+      
+        <link rel="stylesheet"  href="https://hug0vincent.github.io/css/custom.css">
+      
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://hug0vincent.github.io/">Hugo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://hug0vincent.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://hug0vincent.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Hugo VINCENT</h4>
+        
+          <h5 class="sidebar-profile-bio">Student in computer security</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/posts">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-pencil"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/write-ups">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Write-Ups</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/2018/12/who-am-i/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Hug0Vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.root-me.org/hugow?lang=fr#70a472fd3f9279cb9095ce7cbd2cad00" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon rootme_logo "></i>
+      
+      <span class="sidebar-button-desc">Root-me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/hugow_vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/hugo_vincent__/" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram "></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+  <div class="post-header-cover
+              text-left
+              post-header-cover--full"
+       style="background-image:url('/images/mi1/bg.png')"
+       data-behavior="4">
+    
+      <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Mission impossible 1
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2018-12-20T00:00:00Z">
+        
+  December 20, 2018
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/write-ups">write-ups</a>, 
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/santhacklausctf">santhacklausctf</a>
+    
+  
+
+  </div>
+
+</div>
+    
+  </div>
+
+
+      <div id="main" data-behavior="4"
+        class="hasCover
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<table>
+<thead>
+<tr>
+<th align="center">Event</th>
+<th align="center">Challenge</th>
+<th align="center">Category</th>
+<th align="center">Points</th>
+<th align="center">Solves</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">santhacklausctf</td>
+<td align="center">mi1</td>
+<td align="center">Forensic/Crypto</td>
+<td align="center">800</td>
+<td align="center">18</td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="tl-dr">TL;DR</h1>
+
+<p>After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>After downloading the file <span class="highlight-text orange">MI1.zip</span> we had a memdump. You first have to check wether it&rsquo;s a linux or a windows memdump. You can run the following command to determine this :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ strings challenge.elf | grep &#34;Linux version&#34;
+Linux version %d.%d.%d
+Linux version 3.16.0-6-amd64 (debian-kernel@lists.debian.org) (gcc version 4.9.2 (Debian 4.9.2-10&#43;deb8u1) ) #1 SMP Debian 3.16.57-2 (2018-07-14)
+Linux version 3.16.0-6-amd64 (debian-kernel@lists.debian.org) (gcc version 4.9.2 (Debian 4.9.2-10&#43;deb8u1) ) #1 SMP Debian 3.16.57-2 (2018-07-14)
+^C</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>So we have a linux memdump. To use <a href="https://github.com/volatilityfoundation/volatility">volatility</a> we have to build a special profile and to do that we need :</p>
+
+<p><p></p>
+
+<ul>
+<li>A debian distribution</li>
+<li>The right version of the kernel</li>
+<li>Additional tools</li>
+</ul>
+
+<p>I downloaded the last Debian <a href="https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.6.0-amd64-netinst.iso">release</a> installed it on a VM and run :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ uname -a</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>I didn&rsquo;t have the right kernel version so I installed the right one</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ sudo apt-get install linux-image-3.16.0-6-amd64</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>reboot my VM and select in the grub the right kernel version.</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ uname -a
+Linux santa 3.16.0-6-amd64 #1 SMP Debian 3.16.57-2 (2018-07-14) x86_64 GNU/Linux</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<h1 id="building-the-profile">Building the profile</h1>
+
+<p>Then we need to install the kernel headers, it gave me a lot of pain, nothing was working, dependencies were missing. I finally had to install everything by hand.</p>
+
+<pre><code>http://security.debian.org/debian-security/pool/updates/main/l/linux/linux-image-3.16.0-6-amd64_3.16.57-2_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/l/linux/linux-headers-3.16.0-6-amd64_3.16.57-2_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/l/linux/linux-compiler-gcc-4.9-x86_3.16.59-1_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/l/linux-tools/linux-kbuild-3.16_3.16.56-1_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/g/gcc-4.9/gcc-4.9_4.9.2-10+deb8u2_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/l/linux/linux-headers-3.16.0-6-common_3.16.57-2_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/g/gcc-4.9/cpp-4.9_4.9.2-10+deb8u2_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/g/gcc-4.9/gcc-4.9-base_4.9.2-10+deb8u2_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/g/gcc-4.9/libgcc-4.9-dev_4.9.2-10+deb8u2_amd64.deb
+http://security.debian.org/debian-security/pool/updates/main/g/gcc-4.9/libasan1_4.9.2-10+deb8u2_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/i/isl/libisl10_0.12.2-2_amd64.deb
+http://ftp.fr.debian.org/debian/pool/main/c/cloog/libcloog-isl4_0.18.2-1+b2_amd64.deb
+
+</code></pre>
+
+<p>The last step is to install packages for linux profile generation.</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">sudo apt-get install build-essential volatility dwarfdump</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>In order to generate the profile :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">cd volatility/tools/linux
+make
+zip MI1.zip module.dwarf /boot/System.map-3.16.0-6-amd64
+mv MI1.zip ../../volatility/plugings/overlays/linux</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>Let see if our profile is working :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">volatility -f challenge.elf --profile LinuxDebianx64 linux_banner
+Linux version 3.16.0-6-amd64 (debian-kernel@lists.debian.org) (gcc version 4.9.2 (Debian 4.9.2-10&#43;deb8u1) ) #1 SMP Debian 3.16.57-2 (2018-07-14)</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>Yeah it&rsquo;s working, our investigation can now start.</p>
+
+<h1 id="digging-into-the-memdump">Digging into the memdump</h1>
+
+<p>Fisrt thing to do is to check the bash history :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">volatility -f challenge.elf --profile linux_bash
+Volatility Foundation Volatility Framework 2.6
+Pid      Name                 Command Time                   Command
+-------- -------------------- ------------------------------ -------
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   rm flag.txt 
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   ls
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   ls
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   sudo reboot
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   zip -r -e -s 64K backup.zip *
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   cat /dev/urandom &gt; flag.txt 
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   cd /var/www/a-strong-hero.com/
+    1867 bash                 2018-12-16 16:17:45 UTC&#43;0000   sudo reboot
+    1867 bash                 2018-12-16 16:17:49 UTC&#43;0000   cd /var/www/a-strong-hero.com/
+    1867 bash                 2018-12-16 16:17:49 UTC&#43;0000   ls
+    1867 bash                 2018-12-16 16:18:09 UTC&#43;0000   find . -type f -print0 | xargs -0 md5sum &gt; md5sums.txt
+    1867 bash                 2018-12-16 16:18:10 UTC&#43;0000   cat md5sums.txt </code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>Ok so we got something here let&rsquo;s try to understand this. We have a backup.zip file which was built with specials options and an interesting directory called <span class="highlight-text orange">a-strong-hero.com/</span>.</p>
+
+<p>After reading the zip manual we can understand this command</p>
+
+<p><p></p>
+
+<ul>
+<li><em>r</em> is for recursively</li>
+<li><em>e</em> is for encrypted</li>
+<li><em>s</em> is for spliting the final zip into serveral parts of 64 Ko</li>
+</ul>
+
+<p><p></p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ volatility -f challenge.elf --profile LinuxDebianx64 linux_enumerate_files | grep &#39;a-strong-hero.com&#39;
+
+Volatility Foundation Volatility Framework 2.6
+0xffff88001e6190c8                    295194 /var/www/a-strong-hero.com
+0xffff88001e61f0c8                    261718 /var/www/a-strong-hero.com/md5sums.txt
+0xffff88001e61e4b0                    261933 /var/www/a-strong-hero.com/backup.z02
+0xffff88001e61e898                    263120 /var/www/a-strong-hero.com/backup.z05
+0xffff88001e61ec80                    263122 /var/www/a-strong-hero.com/backup.z07
+0xffff88001e61d0c8                    263123 /var/www/a-strong-hero.com/backup.z08
+0xffff88001e61d4b0                    263125 /var/www/a-strong-hero.com/backup.zip
+0xffff88001e61d898                    261792 /var/www/a-strong-hero.com/backup.z01
+0xffff88001e61dc80                    262990 /var/www/a-strong-hero.com/backup.z04
+0xffff88001e61c0c8                    263121 /var/www/a-strong-hero.com/backup.z06
+0xffff88001e61c4b0                    263124 /var/www/a-strong-hero.com/backup.z09
+0xffff88001e61c898                    295201 /var/www/a-strong-hero.com/jcvd-website
+0xffff88001e441898                    295202 /var/www/a-strong-hero.com/jcvd-website/css
+0xffff88001e494898                    261747 /var/www/a-strong-hero.com/jcvd-website/css/bootstrap.min.css
+0xffff88001e494c80                    261739 /var/www/a-strong-hero.com/jcvd-website/css/custom.css
+0xffff88001e4410c8                    261738 /var/www/a-strong-hero.com/jcvd-website/css/bootstrap.css
+0xffff88001e4414b0                    261746 /var/www/a-strong-hero.com/jcvd-website/css/.DS_Store
+0xffff88001e61b0c8                    295207 /var/www/a-strong-hero.com/jcvd-website/fonts
+0xffff88001e441c80                    261755 /var/www/a-strong-hero.com/jcvd-website/fonts/glyphicons-halflings-regular.svg
+0xffff88001e43e0c8                    261762 /var/www/a-strong-hero.com/jcvd-website/fonts/glyphicons-halflings-regular.eot
+0xffff88001e43e4b0                    261752 /var/www/a-strong-hero.com/jcvd-website/fonts/glyphicons-halflings-regular.woff
+0xffff88001e43e898                    261758 /var/www/a-strong-hero.com/jcvd-website/fonts/glyphicons-halflings-regular.woff2
+0xffff88001e43ec80                    261760 /var/www/a-strong-hero.com/jcvd-website/fonts/glyphicons-halflings-regular.ttf
+0xffff88001e61b4b0                    261734 /var/www/a-strong-hero.com/jcvd-website/index.html
+0xffff88001e49a4b0                    295211 /var/www/a-strong-hero.com/jcvd-website/images
+0xffff88001e61b898                    261764 /var/www/a-strong-hero.com/jcvd-website/images/pencil_sharpener.jpg
+0xffff88001e61bc80                    261766 /var/www/a-strong-hero.com/jcvd-website/images/writing.jpg
+0xffff88003ce0f0c8                    261770 /var/www/a-strong-hero.com/jcvd-website/images/header.jpg
+0xffff88003ce0f4b0                    261763 /var/www/a-strong-hero.com/jcvd-website/images/iphone.jpg
+0xffff88003ce0f898                    261768 /var/www/a-strong-hero.com/jcvd-website/images/microphone.jpg
+0xffff88003ce0fc80                    261767 /var/www/a-strong-hero.com/jcvd-website/images/.DS_Store
+0xffff88001e49a0c8                    261771 /var/www/a-strong-hero.com/jcvd-website/images/concert.jpg
+0xffff88001e49a898                    261735 /var/www/a-strong-hero.com/jcvd-website/.DS_Store
+0xffff88001e5ca898                    295216 /var/www/a-strong-hero.com/jcvd-website/js
+0xffff88001e49ac80                    261774 /var/www/a-strong-hero.com/jcvd-website/js/jquery.easing.min.js
+0xffff88001e4440c8                    261784 /var/www/a-strong-hero.com/jcvd-website/js/ie10-viewport-bug-workaround.js
+0xffff88001e4444b0                    261783 /var/www/a-strong-hero.com/jcvd-website/js/custom.js
+0xffff88001e444898                    261780 /var/www/a-strong-hero.com/jcvd-website/js/bootstrap.js
+0xffff88001e444c80                    261775 /var/www/a-strong-hero.com/jcvd-website/js/jquery-1.11.3.min.js
+0xffff88001e5ca0c8                    261772 /var/www/a-strong-hero.com/jcvd-website/js/bootstrap.min.js
+0xffff88001e5ca4b0                    261782 /var/www/a-strong-hero.com/jcvd-website/js/.DS_Store
+0xffff88001e61cc80                    262949 /var/www/a-strong-hero.com/backup.z03</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>In the web directory we can find our splited zip and files about a website. For further investigation we need to extract those zip files.</p>
+
+<h1 id="extracting-the-zip-parts">Extracting the zip parts</h1>
+
+<p>Here is the command to extract those zip parts, you also have to extract the file called <span class="highlight-text orange">backup.zip</span></p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ volatility -f challenge.elf --profile=LinuxDebianx64 linux_find_file -i 0xffff88001e61d898 -O backup.z01
+[...]
+$ volatility -f challenge.elf --profile=LinuxDebianx64 linux_find_file -i 0xffff88001e61c4b0 -O backup.z09</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>To rebuild the zip file :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ zip -FF backup.zip --out encrypted.zip
+$ unzip -v encrypted.zip
+Archive:  encrypted.zip
+ Length   Method    Size  Cmpr    Date    Time   CRC-32   Name
+--------  ------  ------- ---- ---------- ----- --------  ----
+      30  Stored       30   0% 2018-12-16 10:57 ee057a25  flag.txt
+       0  Stored        0   0% 2018-12-16 09:51 00000000  jcvd-website/
+       0  Stored        0   0% 2018-12-16 09:51 00000000  jcvd-website/js/
+    6148  Defl:N      178  97% 2018-12-16 09:51 6d88006a  jcvd-website/js/.DS_Store
+   36816  Defl:N     9736  74% 2018-12-16 09:51 6e49bf5e  jcvd-website/js/bootstrap.min.js
+   95957  Defl:N    33159  65% 2018-12-16 09:51 9365860e  jcvd-website/js/jquery-1.11.3.min.js
+   68890  Defl:N    14104  80% 2018-12-16 09:51 e6e7a5a7  jcvd-website/js/bootstrap.js
+      79  Defl:N       74   6% 2018-12-16 09:51 771936f7  jcvd-website/js/custom.js
+     641  Defl:N      406  37% 2018-12-16 09:51 241e2d06  jcvd-website/js/ie10-viewport-bug-workaround.js
+    5564  Defl:N     1853  67% 2018-12-16 09:51 20faacf3  jcvd-website/js/jquery.easing.min.js
+   12292  Defl:N     2079  83% 2018-12-16 09:51 97a194fa  jcvd-website/.DS_Store
+       0  Stored        0   0% 2018-12-16 09:51 00000000  jcvd-website/images/
+   37682  Defl:N    37558   0% 2018-12-16 09:51 f88ae623  jcvd-website/images/concert.jpg
+    6148  Defl:N      178  97% 2018-12-16 09:51 6d88006a  jcvd-website/images/.DS_Store
+   52003  Defl:N    51761   1% 2018-12-16 09:51 caf85339  jcvd-website/images/microphone.jpg
+   49276  Defl:N    49043   1% 2018-12-16 09:51 187195bb  jcvd-website/images/iphone.jpg
+   91733  Defl:N    83026  10% 2018-12-16 09:51 04fbc0a3  jcvd-website/images/header.jpg
+   26267  Defl:N    26101   1% 2018-12-16 09:51 5cbadcef  jcvd-website/images/writing.jpg
+  133773  Defl:N   133615   0% 2018-12-16 09:51 90a56f07  jcvd-website/images/pencil_sharpener.jpg
+    7384  Defl:N     2239  70% 2018-12-16 09:51 07211a33  jcvd-website/index.html
+       0  Stored        0   0% 2018-12-16 09:51 00000000  jcvd-website/fonts/
+   45404  Defl:N    23491  48% 2018-12-16 09:51 9c3c179a  jcvd-website/fonts/glyphicons-halflings-regular.ttf
+   18028  Defl:N    18012   0% 2018-12-16 09:51 61c3e876  jcvd-website/fonts/glyphicons-halflings-regular.woff2
+   23424  Defl:N    23120   1% 2018-12-16 09:51 f57b14ea  jcvd-website/fonts/glyphicons-halflings-regular.woff
+   20127  Defl:N    20032   1% 2018-12-16 09:51 9cb1c758  jcvd-website/fonts/glyphicons-halflings-regular.eot
+  108738  Defl:N    26799  75% 2018-12-16 09:51 c9c6ee7c  jcvd-website/fonts/glyphicons-halflings-regular.svg
+       0  Stored        0   0% 2018-12-16 09:51 00000000  jcvd-website/css/
+    6148  Defl:N      178  97% 2018-12-16 09:51 6d88006a  jcvd-website/css/.DS_Store
+  147430  Defl:N    21352  86% 2018-12-16 09:51 1367536e  jcvd-website/css/bootstrap.css
+    8335  Defl:N     1613  81% 2018-12-16 09:51 2f33e8e6  jcvd-website/css/custom.css
+  122540  Defl:N    19701  84% 2018-12-16 09:51 bbebdb54  jcvd-website/css/bootstrap.min.css
+--------          -------  ---                            -------
+ 1130857           599438  47%                            31 files</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>The first file is <span class="highlight-text orange">flag.txt</span>, we now know that we have to decrypt this zip archive to validate this challenge. I recently read an attack on encrypted zip files. If we have a clear copy of a file that is present on an encrypted zip archive we can retrieve all the files in the encrypted zip. It&rsquo;s a known plain text attack.</p>
+
+<p>We can use a tool called <a href="https://github.com/keyunluo/pkcrack">pkcrack</a> to do it and I choosed the file <span class="highlight-text orange">bootstrap.min.js</span> as the known file</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ ./pkcrack -C encrypted.zip -c &#34;jcvd-website/js/bootstrap.min.js&#34; -P bootstrap.min.js.zip -p &#34;bootstrap.min.js&#34; -d decrypted.zip
+Files read. Starting stage 1 on Tue Dec 25 16:42:41 2018
+Generating 1st generation of possible key2_9747 values...done.
+Found 4194304 possible key2-values.
+Now we&#39;re trying to reduce these...
+Lowest number: 940 values at offset 5497
+Lowest number: 897 values at offset 5349
+Lowest number: 862 values at offset 4869
+Lowest number: 847 values at offset 4780
+Lowest number: 829 values at offset 4066
+Lowest number: 825 values at offset 3886
+Lowest number: 749 values at offset 3885
+Lowest number: 697 values at offset 3880
+Lowest number: 695 values at offset 3875
+Done. Left with 695 possible Values. bestOffset is 3875.
+Stage 1 completed. Starting stage 2 on Tue Dec 25 16:43:01 2018
+Ta-daaaaa! key0=751f036a, key1=397078fa, key2=d156dfac
+Probabilistic test succeeded for 5877 bytes.
+Ta-daaaaa! key0=751f036a, key1=397078fa, key2=d156dfac
+Probabilistic test succeeded for 5877 bytes.
+Ta-daaaaa! key0=751f036a, key1=397078fa, key2=d156dfac
+Probabilistic test succeeded for 5877 bytes.
+Ta-daaaaa! key0=751f036a, key1=397078fa, key2=d156dfac
+Probabilistic test succeeded for 5877 bytes.
+Stage 2 completed. Starting zipdecrypt on Tue Dec 25 16:43:41 2018
+Decrypting flag.txt (91c644af94249dd314b62b57)... OK!
+Decrypting jcvd-website/js/.DS_Store (2fe6d64c750f20da2d6b7b4e)... OK!
+Decrypting jcvd-website/js/bootstrap.min.js (31beae5a6417af2fcee27b4e)... OK!
+Decrypting jcvd-website/js/jquery-1.11.3.min.js (68cffaef64b77eca810f7b4e)... OK!
+Decrypting jcvd-website/js/bootstrap.js (172450e6004efe284b507b4e)... OK!
+Decrypting jcvd-website/js/custom.js (4038fc0d73419d37a34f7b4e)... OK!
+Decrypting jcvd-website/js/ie10-viewport-bug-workaround.js (71f134fe12dcf4d413c17b4e)... OK!
+Decrypting jcvd-website/js/jquery.easing.min.js (dd66d46318af5411b24b7b4e)... OK!
+Decrypting jcvd-website/.DS_Store (ccc90b8c7a949b1dd0297b4e)... OK!
+Decrypting jcvd-website/images/concert.jpg (2531ab52a4c3f2af90017b4e)... OK!
+Decrypting jcvd-website/images/.DS_Store (cd53bfa34fee99aade507b4e)... OK!
+Decrypting jcvd-website/images/microphone.jpg (e04e73cca1576915c96f7b4e)... OK!
+Decrypting jcvd-website/images/iphone.jpg (7d0e3ddec5bb0eb5d5537b4e)... OK!
+Decrypting jcvd-website/images/header.jpg (558cd122c491a4c95df47b4e)... OK!
+Decrypting jcvd-website/images/writing.jpg (de9b24799ceac1377f317b4e)... OK!
+Decrypting jcvd-website/images/pencil_sharpener.jpg (89cbb73d79aa6c0472607b4e)... OK!
+Decrypting jcvd-website/index.html (e2b688ad4623c81471017b4e)... OK!
+*** Error in `./pkcrack&#39;: corrupted size vs. prev_size: 0x000055b2dbb0a280 ***</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>I got an error and when I tried to unzip the <span class="highlight-text orange">decrypted.zip</span>, it also gave me an error because the file was corrupted. After many tries and hours spent on this challenge I finally used the <em>A</em> option of zip and the tool <span class="highlight-text orange">zipdecrypt</span> with the previous keys that we found. (zipdecrypt is in the pkcrack github repository)</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">$ zip -A encrypted.zip
+$ Zip entry offsets do not need adjusting
+
+$ ./zipdecrypt 751f036a 397078fa d156dfac encrypted.zip decrypted.zip
+Decrypting flag.txt (91c644af94249dd314b62b57)... OK!
+Decrypting jcvd-website/js/.DS_Store (2fe6d64c750f20da2d6b7b4e)... OK!
+[...]
+Decrypting jcvd-website/css/custom.css (2fb6cfe34b31eb7bfd4d7b4e)... OK!
+Decrypting jcvd-website/css/bootstrap.min.css (a0714f05ca3b87dfec097b4e)... OK!
+
+unzip decrypted.zip 
+Archive:  decrypted.zip
+ extracting: flag.txt                
+   creating: jcvd-website/
+   creating: jcvd-website/js/
+[...]
+  inflating: jcvd-website/images/writing.jpg  
+  inflating: jcvd-website/images/pencil_sharpener.jpg  
+  error:  invalid compressed data to inflate
+  inflating: jcvd-website/index.html  
+[...] 
+  inflating: jcvd-website/css/custom.css  
+  inflating: jcvd-website/css/bootstrap.min.css  
+
+$ cat flag.txt
+IMTLD{z1p_1s_n0t_alw4y5_s4fe}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>And we have our flag : <span class="highlight-text red">IMTLD{z1p_1s_n0t_alw4y5_s4fe}</span></p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/forensic/">forensic</a>
+
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/crypto/">crypto</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2018/11/who-am-i/" data-tooltip="Who am I ?">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 Hugo VINCENT. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2018/11/who-am-i/" data-tooltip="Who am I ?">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhug0vincent.github.io%2F2018%2F12%2Fmission-impossible-1%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhug0vincent.github.io%2F2018%2F12%2Fmission-impossible-1%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Hugo VINCENT</h4>
+    
+      <div id="about-card-bio">Student in computer security</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Student at INSA / SIF master
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        France
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+                <h3 class="media-heading">Mission impossible 1</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/11/who-am-i/">
+                <h3 class="media-heading">Who am I ?</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">I&rsquo;m actually student in computer science in the field of cybersecurity. I didn’t know anything about IT security and hacking few years ago. I first learn with Damn Vulnerable Web App (DVWA), and then I discovered Root-me. Since then I&rsquo;ve learned a lot and I love learning new things and solving some hacking challenges. I&rsquo;m now playing CTF with Beers4flags.
+I&rsquo;ve done this blog to host my write-ups and some posts about privacy or personal hacking stuff.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         2 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://hug0vincent.github.io/images/bg2.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://hug0vincent.github.io/js/script-hbdqx7wlhrscaipt6txjo74wihw1bagwt97hjgdefg9y8kq3xpotphkbsilg.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/hug0vincent.github.io\/2018\/12\/mission-impossible-1\/';
+          
+            this.page.identifier = '\/2018\/12\/mission-impossible-1\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

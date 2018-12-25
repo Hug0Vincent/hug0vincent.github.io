@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Hugo</title>
-    <link>https://hug0vincent.github.io/</link>
-    <description>Recent content on Hugo</description>
+    <title>Santhacklausctf on Hugo</title>
+    <link>https://hug0vincent.github.io/categories/santhacklausctf/</link>
+    <description>Recent content in Santhacklausctf on Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <lastBuildDate>Thu, 20 Dec 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://hug0vincent.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://hug0vincent.github.io/categories/santhacklausctf/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,16 +19,6 @@
       <guid>https://hug0vincent.github.io/2018/12/mission-impossible-1/</guid>
       <description>Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
 Introduction After downloading the file MI1.zip we had a memdump.</description>
-    </item>
-    
-    <item>
-      <title>Who am I ?</title>
-      <link>https://hug0vincent.github.io/2018/11/who-am-i/</link>
-      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://hug0vincent.github.io/2018/11/who-am-i/</guid>
-      <description>I&amp;rsquo;m actually student in computer science in the field of cybersecurity. I didn’t know anything about IT security and hacking few years ago. I first learn with Damn Vulnerable Web App (DVWA), and then I discovered Root-me. Since then I&amp;rsquo;ve learned a lot and I love learning new things and solving some hacking challenges. I&amp;rsquo;m now playing CTF with Beers4flags.
-I&amp;rsquo;ve done this blog to host my write-ups and some posts about privacy or personal hacking stuff.</description>
     </item>
     
   </channel>
