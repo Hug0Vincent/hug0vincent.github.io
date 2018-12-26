@@ -22,6 +22,15 @@ Introduction After downloading the file MI1.zip we had a memdump.</description>
     </item>
     
     <item>
+      <title>Mission impossible 2</title>
+      <link>https://hug0vincent.github.io/2018/12/mission-impossible-2/</link>
+      <pubDate>Thu, 20 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2018/12/mission-impossible-2/</guid>
+      <description>Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.</description>
+    </item>
+    
+    <item>
       <title>Who am I ?</title>
       <link>https://hug0vincent.github.io/2018/11/who-am-i/</link>
       <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>

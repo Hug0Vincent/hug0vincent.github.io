@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Forensic on Hugo</title>
-    <link>https://hug0vincent.github.io/tags/forensic/</link>
-    <description>Recent content in Forensic on Hugo</description>
+    <title>Network on Hugo</title>
+    <link>https://hug0vincent.github.io/tags/network/</link>
+    <description>Recent content in Network on Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
     <lastBuildDate>Thu, 20 Dec 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://hug0vincent.github.io/tags/forensic/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://hug0vincent.github.io/tags/network/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Mission impossible 1</title>
-      <link>https://hug0vincent.github.io/2018/12/mission-impossible-1/</link>
-      <pubDate>Thu, 20 Dec 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://hug0vincent.github.io/2018/12/mission-impossible-1/</guid>
-      <description>Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
-Introduction After downloading the file MI1.zip we had a memdump.</description>
-    </item>
     
     <item>
       <title>Mission impossible 2</title>
