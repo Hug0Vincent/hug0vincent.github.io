@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Inshack 2019 on Hugo</title>
+    <link>https://hug0vincent.github.io/categories/inshack-2019/</link>
+    <description>Recent content in Inshack 2019 on Hugo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-en</language>
+    <lastBuildDate>Mon, 06 May 2019 18:39:04 +0200</lastBuildDate>
+    
+	<atom:link href="https://hug0vincent.github.io/categories/inshack-2019/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Give Me Your Shell</title>
+      <link>https://hug0vincent.github.io/2019/05/give-me-your-shell/</link>
+      <pubDate>Mon, 06 May 2019 18:39:04 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/05/give-me-your-shell/</guid>
+      <description>Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+Getting informations First I looked at the protections on the binary :</description>
+    </item>
+    
+  </channel>
+</rss>

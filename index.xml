@@ -6,10 +6,20 @@
     <description>Recent content on Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
-    <lastBuildDate>Thu, 20 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 06 May 2019 18:39:04 +0200</lastBuildDate>
     
 	<atom:link href="https://hug0vincent.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Give Me Your Shell</title>
+      <link>https://hug0vincent.github.io/2019/05/give-me-your-shell/</link>
+      <pubDate>Mon, 06 May 2019 18:39:04 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/05/give-me-your-shell/</guid>
+      <description>Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+Getting informations First I looked at the protections on the binary :</description>
+    </item>
     
     <item>
       <title>Mission impossible 1</title>
@@ -36,7 +46,7 @@ Introduction After downloading the file MI1.zip we had a memdump.</description>
       <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
       
       <guid>https://hug0vincent.github.io/page/about/</guid>
-      <description>I&amp;rsquo;m actually student in computer science in the field of cybersecurity. I didn’t know anything about IT security and hacking few years ago. I first learn with Damn Vulnerable Web App (DVWA), and then I discovered Root-me. Since then I&amp;rsquo;ve learned a lot and I love learning new things and solving some hacking challenges. I&amp;rsquo;m now playing CTF with Beers4flags.
+      <description>I&amp;rsquo;m actually student in computer science in the field of cybersecurity. I didn’t know anything about IT security and hacking few years ago. I first learn with Damn Vulnerable Web App (DVWA), and then I discovered Root-me. Since then I&amp;rsquo;ve learned a lot and I love learning new things and solving some hacking challenges.
 I&amp;rsquo;ve done this blog to host my write-ups and some posts about privacy or personal hacking stuff.</description>
     </item>
     

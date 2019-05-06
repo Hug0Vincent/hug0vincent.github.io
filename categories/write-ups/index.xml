@@ -6,10 +6,20 @@
     <description>Recent content in Write Ups on Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
-    <lastBuildDate>Thu, 20 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 06 May 2019 18:39:04 +0200</lastBuildDate>
     
 	<atom:link href="https://hug0vincent.github.io/categories/write-ups/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Give Me Your Shell</title>
+      <link>https://hug0vincent.github.io/2019/05/give-me-your-shell/</link>
+      <pubDate>Mon, 06 May 2019 18:39:04 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/05/give-me-your-shell/</guid>
+      <description>Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+Getting informations First I looked at the protections on the binary :</description>
+    </item>
     
     <item>
       <title>Mission impossible 1</title>

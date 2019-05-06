@@ -4,3 +4,12 @@
     background-repeat: no-repeat;
     background-size: 90%
 }
+
+.post-header-cover .post-header .post-title {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.post-header-cover .post-header .post-meta {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+

@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://hug0vincent.github.io/2019/05/give-me-your-shell/</loc>
+    <lastmod>2019-05-06T18:39:04+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://hug0vincent.github.io/2018/12/mission-impossible-1/</loc>
     <lastmod>2018-12-20T00:00:00+00:00</lastmod>
   </url>
@@ -43,7 +48,13 @@
   
   <url>
     <loc>https://hug0vincent.github.io/</loc>
-    <lastmod>2018-12-20T00:00:00+00:00</lastmod>
+    <lastmod>2019-05-06T18:39:04+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://hug0vincent.github.io/categories/inshack-2019/</loc>
+    <lastmod>2019-05-06T18:39:04+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -61,7 +72,19 @@
   
   <url>
     <loc>https://hug0vincent.github.io/post/</loc>
-    <lastmod>2018-12-20T00:00:00+00:00</lastmod>
+    <lastmod>2019-05-06T18:39:04+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://hug0vincent.github.io/tags/pwn/</loc>
+    <lastmod>2019-05-06T18:39:04+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://hug0vincent.github.io/tags/reverse/</loc>
+    <lastmod>2019-05-06T18:39:04+02:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -79,7 +102,7 @@
   
   <url>
     <loc>https://hug0vincent.github.io/categories/write-ups/</loc>
-    <lastmod>2018-12-20T00:00:00+00:00</lastmod>
+    <lastmod>2019-05-06T18:39:04+02:00</lastmod>
     <priority>0</priority>
   </url>
   
