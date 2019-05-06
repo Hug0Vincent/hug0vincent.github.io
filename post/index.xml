@@ -30,15 +30,5 @@ Introduction After downloading the file MI1.zip we had a memdump.</description>
       <description>Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.</description>
     </item>
     
-    <item>
-      <title>Who am I ?</title>
-      <link>https://hug0vincent.github.io/2018/11/who-am-i/</link>
-      <pubDate>Sat, 24 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://hug0vincent.github.io/2018/11/who-am-i/</guid>
-      <description>I&amp;rsquo;m actually student in computer science in the field of cybersecurity. I didn’t know anything about IT security and hacking few years ago. I first learn with Damn Vulnerable Web App (DVWA), and then I discovered Root-me. Since then I&amp;rsquo;ve learned a lot and I love learning new things and solving some hacking challenges. I&amp;rsquo;m now playing CTF with Beers4flags.
-I&amp;rsquo;ve done this blog to host my write-ups and some posts about privacy or personal hacking stuff.</description>
-    </item>
-    
   </channel>
 </rss>
