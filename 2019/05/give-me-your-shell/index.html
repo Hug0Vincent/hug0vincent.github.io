@@ -8,11 +8,11 @@
 <meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="Hugo VINCENT">
 <meta name="keywords" content="pwn, reverse, blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
-<meta name="description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+<meta name="description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
 Getting informations First I looked at the protections on the binary :">
 
 
-<meta property="og:description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+<meta property="og:description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
 Getting informations First I looked at the protections on the binary :">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Give Me Your Shell">
@@ -20,9 +20,9 @@ Getting informations First I looked at the protections on the binary :">
 <meta property="og:url" content="https://hug0vincent.github.io/2019/05/give-me-your-shell/">
 <meta property="twitter:url" content="https://hug0vincent.github.io/2019/05/give-me-your-shell/">
 <meta property="og:site_name" content="Hugo">
-<meta property="og:description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+<meta property="og:description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
 Getting informations First I looked at the protections on the binary :">
-<meta name="twitter:description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+<meta name="twitter:description" content="Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
 Getting informations First I looked at the protections on the binary :">
 <meta property="og:locale" content="en-us">
 
@@ -321,7 +321,7 @@ Getting informations First I looked at the protections on the binary :">
 
 <h1 id="tl-dr">TL;DR</h1>
 
-<p>This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.</p>
+<p>This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.</p>
 
 <h1 id="getting-informations">Getting informations</h1>
 
@@ -357,7 +357,7 @@ Getting informations First I looked at the protections on the binary :">
 </div>
 
 
-<p>No protections are enabled but it&rsquo;s a remote challenge and we can assume that the ASLR is enabled on the remote server. Let keep that in mind and try to run the binary.</p>
+<p>No protections is enabled but it&rsquo;s a remote challenge and we can assume that the ASLR is enabled on the remote server. Let keep that in mind and try to run the binary.</p>
 
 
 
@@ -413,7 +413,7 @@ Getting informations First I looked at the protections on the binary :">
 </div>
 
 
-<h1 id="road-to-the-exploit">road to the exploit</h1>
+<h1 id="road-to-the-exploit">Road to the exploit</h1>
 
 <p>Since ASLR is randomizing the stack addresses we can&rsquo;t find the address of our payload and jump to it. We could try to leak an address of libc and perform a ret2libc but I didn&rsquo;t use this technique because it&rsquo;s an 64 bits binary and there is no easy way to control the register <span class="highlight-text orange">rdi</span> which is used to pass the first arguments. So without a gadget to properly set <span class="highlight-text orange">rdi</span> we can&rsquo;t make a call to <span class="highlight-text orange">puts</span> with the address of <span class="highlight-text orange">gets</span> as parameter to leak it&rsquo;s address. But remember the NX bit is not set, here is a definition from wikipedia :</p>
 
@@ -462,7 +462,7 @@ An operating system with support for the NX bit may mark certain areas of memory
   </table>
 </figure>
 
-<p>By chance there is a gadget which allow us to set a craft value in <span class="highlight-text orange">rbp</span> :</p>
+<p>By chance there is a <a href="https://thinkloveshare.com/en/hacking/pwn_3of4_saperliropette/">gadget</a> which allow us to set a crafted value in <span class="highlight-text orange">rbp</span> :</p>
 
 
   
@@ -930,7 +930,7 @@ s.interactive()</code></pre>
                   May 5, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirect the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
 Getting informations First I looked at the protections on the binary :</div>
             </div>
             <div style="clear:both;"></div>
