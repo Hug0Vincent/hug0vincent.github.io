@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en-en">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="Hugo VINCENT">
+<meta name="keywords" content=", blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
+<meta name="description" content="Blog about privacy and hacking">
+
+
+<meta property="og:description" content="Blog about privacy and hacking">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aperictf">
+<meta name="twitter:title" content="Aperictf">
+<meta property="og:url" content="https://hug0vincent.github.io/categories/aperictf/">
+<meta property="twitter:url" content="https://hug0vincent.github.io/categories/aperictf/">
+<meta property="og:site_name" content="Hugo">
+<meta property="og:description" content="Blog about privacy and hacking">
+<meta name="twitter:description" content="Blog about privacy and hacking">
+<meta property="og:locale" content="en-us">
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/profil.jpg">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/profil.jpg">
+
+
+    <title>Aperictf</title>
+
+    <link rel="icon" href="https://hug0vincent.github.io/favicon.png">
+    
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="https://hug0vincent.github.io/categories/aperictf/index.xml">
+    
+
+    
+
+    <link rel="canonical" href="https://hug0vincent.github.io/categories/aperictf/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet"> 
+
+    
+    <link rel="stylesheet" href="https://hug0vincent.github.io/css/style-2wfjlq5nwe9qjygqo9yarila7qvjwdmv.min.css" />
+    
+    
+      
+        <link rel="stylesheet"  href="https://hug0vincent.github.io/css/custom.css">
+      
+    
+
+    
+      
+    
+    
+
+    <script type="text/javascript">
+      window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+        heap.load("381812841");
+  </script>
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="1">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://hug0vincent.github.io/">Hugo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://hug0vincent.github.io/page/about/">
+    
+    
+    
+      
+        <img class="header-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="1">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://hug0vincent.github.io/page/about/">
+          <img class="sidebar-profile-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Hugo VINCENT</h4>
+        
+          <h5 class="sidebar-profile-bio">Student in computer security</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/posts">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-pencil"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/write-ups">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Write-Ups</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/page/about/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Hug0Vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.root-me.org/hugow?lang=fr#70a472fd3f9279cb9095ce7cbd2cad00" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon rootme_logo "></i>
+      
+      <span class="sidebar-button-desc">Root-me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/hugow_vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/hugo_vincent__/" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram "></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+        
+
+      
+      <div id="main" data-behavior="1"
+        class="
+               hasCoverMetaIn
+               ">
+        
+          <section class="postShorten-group main-content-wrap">
+            
+            
+              
+  
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/tmnt/">
+          TMNT
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-10-09T16:39:53&#43;02:00">
+        
+  October 9, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/write-ups">write-ups</a>, 
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/aperictf">AperiCtf</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      
+        Write-up about the TMNT challenge from the AperiCtf
+      
+      <p>
+        <a href="https://hug0vincent.github.io/2019/10/tmnt/" class="postShorten-excerpt_link link">Continue reading</a>
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+            
+              
+  
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+          Pwn Run See (part 1 &amp; 2)
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-10-09T11:39:54&#43;02:00">
+        
+  October 9, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/write-ups">write-ups</a>, 
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/aperictf">AperiCtf</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      
+        Write-up about the two part of the challenge PwnRunSee from the AperiCtf
+      
+      <p>
+        <a href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/" class="postShorten-excerpt_link link">Continue reading</a>
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+            
+            
+
+          </section>
+        
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 Hugo VINCENT. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Hugo VINCENT</h4>
+    
+      <div id="about-card-bio">Student in computer security</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Student at INSA / SIF master
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        France
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/tmnt/">
+                <h3 class="media-heading">TMNT</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+                <h3 class="media-heading">Pwn Run See (part 1 &amp; 2)</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/filereader/">
+                <h3 class="media-heading">Filereader</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/give-me-your-shell/">
+                <h3 class="media-heading">Give Me Your Shell</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+Getting informations First I looked at the protections on the binary :</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+                <h3 class="media-heading">Mission impossible 1</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+                <h3 class="media-heading">Mission impossible 2</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         6 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://hug0vincent.github.io/images/bg2.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://hug0vincent.github.io/js/script-hbdqx7wlhrscaipt6txjo74wihw1bagwt97hjgdefg9y8kq3xpotphkbsilg.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+
+
+
+    
+  </body>
+</html>
+

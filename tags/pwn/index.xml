@@ -6,10 +6,19 @@
     <description>Recent content in Pwn on Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
-    <lastBuildDate>Tue, 21 May 2019 19:11:39 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 09 Oct 2019 11:39:54 +0200</lastBuildDate>
     
 	<atom:link href="https://hug0vincent.github.io/tags/pwn/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Pwn Run See (part 1 &amp; 2)</title>
+      <link>https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/</link>
+      <pubDate>Wed, 09 Oct 2019 11:39:54 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/</guid>
+      <description>Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.</description>
+    </item>
     
     <item>
       <title>Filereader</title>

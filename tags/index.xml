@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Docker</title>
+      <link>https://hug0vincent.github.io/tags/docker/</link>
+      <pubDate>Wed, 09 Oct 2019 11:39:54 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Forensic</title>
       <link>https://hug0vincent.github.io/tags/forensic/</link>
       <pubDate>Thu, 20 Dec 2018 00:00:00 +0000</pubDate>
@@ -41,7 +50,7 @@
     <item>
       <title>Pwn</title>
       <link>https://hug0vincent.github.io/tags/pwn/</link>
-      <pubDate>Tue, 21 May 2019 19:11:39 +0200</pubDate>
+      <pubDate>Wed, 09 Oct 2019 11:39:54 +0200</pubDate>
       
       <guid>https://hug0vincent.github.io/tags/pwn/</guid>
       <description></description>
@@ -53,6 +62,33 @@
       <pubDate>Tue, 21 May 2019 19:11:39 +0200</pubDate>
       
       <guid>https://hug0vincent.github.io/tags/reverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Uaf</title>
+      <link>https://hug0vincent.github.io/tags/uaf/</link>
+      <pubDate>Wed, 09 Oct 2019 11:39:54 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/tags/uaf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Web</title>
+      <link>https://hug0vincent.github.io/tags/web/</link>
+      <pubDate>Wed, 09 Oct 2019 16:39:53 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Xss</title>
+      <link>https://hug0vincent.github.io/tags/xss/</link>
+      <pubDate>Wed, 09 Oct 2019 16:39:53 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/tags/xss/</guid>
       <description></description>
     </item>
     

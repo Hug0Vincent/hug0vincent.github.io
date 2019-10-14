@@ -6,10 +6,29 @@
     <description>Recent content in Posts on Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
-    <lastBuildDate>Tue, 21 May 2019 19:11:39 +0200</lastBuildDate>
+    <lastBuildDate>Wed, 09 Oct 2019 16:39:53 +0200</lastBuildDate>
     
 	<atom:link href="https://hug0vincent.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>TMNT</title>
+      <link>https://hug0vincent.github.io/2019/10/tmnt/</link>
+      <pubDate>Wed, 09 Oct 2019 16:39:53 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/10/tmnt/</guid>
+      <description>Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !</description>
+    </item>
+    
+    <item>
+      <title>Pwn Run See (part 1 &amp; 2)</title>
+      <link>https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/</link>
+      <pubDate>Wed, 09 Oct 2019 11:39:54 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/</guid>
+      <description>Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.</description>
+    </item>
     
     <item>
       <title>Filereader</title>

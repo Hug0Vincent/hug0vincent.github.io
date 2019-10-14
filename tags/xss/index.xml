@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Xss on Hugo</title>
+    <link>https://hug0vincent.github.io/tags/xss/</link>
+    <description>Recent content in Xss on Hugo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-en</language>
+    <lastBuildDate>Wed, 09 Oct 2019 16:39:53 +0200</lastBuildDate>
+    
+	<atom:link href="https://hug0vincent.github.io/tags/xss/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>TMNT</title>
+      <link>https://hug0vincent.github.io/2019/10/tmnt/</link>
+      <pubDate>Wed, 09 Oct 2019 16:39:53 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/10/tmnt/</guid>
+      <description>Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !</description>
+    </item>
+    
+  </channel>
+</rss>
