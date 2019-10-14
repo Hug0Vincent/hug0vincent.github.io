@@ -1,6 +1,7 @@
 (function($) {
   'use strict';
 
+
   // Fade out the blog and let drop the about card of the author and vice versa
 
   /**
