@@ -21,11 +21,20 @@
     </item>
     
     <item>
-      <title>Aperictf</title>
-      <link>https://hug0vincent.github.io/categories/aperictf/</link>
+      <title>Aperi Ctf</title>
+      <link>https://hug0vincent.github.io/categories/aperi-ctf/</link>
       <pubDate>Wed, 09 Oct 2019 16:39:53 +0200</pubDate>
       
-      <guid>https://hug0vincent.github.io/categories/aperictf/</guid>
+      <guid>https://hug0vincent.github.io/categories/aperi-ctf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Dvid</title>
+      <link>https://hug0vincent.github.io/categories/dvid/</link>
+      <pubDate>Wed, 23 Oct 2019 22:24:10 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/categories/dvid/</guid>
       <description></description>
     </item>
     
@@ -44,6 +53,15 @@
       <pubDate>Mon, 06 May 2019 18:39:04 +0200</pubDate>
       
       <guid>https://hug0vincent.github.io/categories/inshack-2019/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Posts</title>
+      <link>https://hug0vincent.github.io/categories/posts/</link>
+      <pubDate>Wed, 23 Oct 2019 22:24:10 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/categories/posts/</guid>
       <description></description>
     </item>
     

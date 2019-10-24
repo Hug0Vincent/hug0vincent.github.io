@@ -6,10 +6,19 @@
     <description>Recent content in Tags on Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-en</language>
-    <lastBuildDate>Thu, 20 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 23 Oct 2019 22:24:10 +0200</lastBuildDate>
     
 	<atom:link href="https://hug0vincent.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Bluetooth</title>
+      <link>https://hug0vincent.github.io/tags/bluetooth/</link>
+      <pubDate>Wed, 23 Oct 2019 22:24:10 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/tags/bluetooth/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Crypto</title>
@@ -41,7 +50,7 @@
     <item>
       <title>Network</title>
       <link>https://hug0vincent.github.io/tags/network/</link>
-      <pubDate>Thu, 20 Dec 2018 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 23 Oct 2019 22:24:10 +0200</pubDate>
       
       <guid>https://hug0vincent.github.io/tags/network/</guid>
       <description></description>

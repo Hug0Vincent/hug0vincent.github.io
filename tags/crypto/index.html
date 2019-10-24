@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
 <meta name="author" content="Hugo VINCENT">
-<meta name="keywords" content=", blog, hacking, Privacy, vie-privée, insa, cybersecurity, infosec, hack">
+<meta name="keywords" content=", blog, hacking, cybersecurity, infosec, hack, hugow, ctf, write-up, wu, hacking">
 <meta name="description" content="Blog about privacy and hacking">
 
 
@@ -403,6 +403,68 @@
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/dvid-characteristics-2/">
+                <h3 class="media-heading">DVID : Characteristics 2</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how to solve the third challenge of the DVID project. In this challenge we need to write data to a special characteristic.
+Challenge Let&rsquo;s flash the firmware, enable and setup the usb dongle:
+     1
+2
+3
+  sudo avrdude -c usbasp -p m328p -U flash:w:characteristics2.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/dvid-characteristics/">
+                <h3 class="media-heading">DVID : Characteristics</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how to solve the second Bluetooth challenge of the DVID project. In this challenge we need to read data from a special characteristic.
+Challenge Let&rsquo;s flash the firmware, enable Bluetooth and setup the usb dongle:
+     1
+2
+3
+  sudo avrdude -c usbasp -p m328p -U flash:w:characteristics.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/ble-introduction/">
+                <h3 class="media-heading">BLE introduction</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how the Bluetooth protocol works and how we can solve the first Bluetooth challenge of the DVID project.
+Bluetooth protocol This talk is a good introduction to Bluetooth hacking, what&rsquo;s following come from this document, but if you want more details you should read it. The next diagram shows how a typical connection between a phone and a Bluetooth device work.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/tmnt/">
                 <h3 class="media-heading">TMNT</h3>
               </a>
@@ -512,7 +574,7 @@ Introduction After downloading the file MI1.zip we had a memdump.</div>
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         6 posts found
+         9 posts found
       </p>
     </div>
   </div>

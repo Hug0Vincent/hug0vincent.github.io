@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Hugo</title>
+    <link>https://hug0vincent.github.io/categories/posts/</link>
+    <description>Recent content in Posts on Hugo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-en</language>
+    <lastBuildDate>Wed, 23 Oct 2019 22:24:10 +0200</lastBuildDate>
+    
+	<atom:link href="https://hug0vincent.github.io/categories/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>DVID : Characteristics 2</title>
+      <link>https://hug0vincent.github.io/2019/10/dvid-characteristics-2/</link>
+      <pubDate>Wed, 23 Oct 2019 22:24:10 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/10/dvid-characteristics-2/</guid>
+      <description>Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how to solve the third challenge of the DVID project. In this challenge we need to write data to a special characteristic.
+Challenge Let&amp;rsquo;s flash the firmware, enable and setup the usb dongle:
+     1
+2
+3
+  sudo avrdude -c usbasp -p m328p -U flash:w:characteristics2.</description>
+    </item>
+    
+    <item>
+      <title>DVID : Characteristics</title>
+      <link>https://hug0vincent.github.io/2019/10/dvid-characteristics/</link>
+      <pubDate>Wed, 23 Oct 2019 10:28:41 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/10/dvid-characteristics/</guid>
+      <description>Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how to solve the second Bluetooth challenge of the DVID project. In this challenge we need to read data from a special characteristic.
+Challenge Let&amp;rsquo;s flash the firmware, enable Bluetooth and setup the usb dongle:
+     1
+2
+3
+  sudo avrdude -c usbasp -p m328p -U flash:w:characteristics.</description>
+    </item>
+    
+    <item>
+      <title>BLE introduction</title>
+      <link>https://hug0vincent.github.io/2019/10/ble-introduction/</link>
+      <pubDate>Sat, 19 Oct 2019 14:23:07 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2019/10/ble-introduction/</guid>
+      <description>Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how the Bluetooth protocol works and how we can solve the first Bluetooth challenge of the DVID project.
+Bluetooth protocol This talk is a good introduction to Bluetooth hacking, what&amp;rsquo;s following come from this document, but if you want more details you should read it. The next diagram shows how a typical connection between a phone and a Bluetooth device work.</description>
+    </item>
+    
+  </channel>
+</rss>
