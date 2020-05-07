@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kernel on Hugo</title>
+    <link>https://hug0vincent.github.io/tags/kernel/</link>
+    <description>Recent content in Kernel on Hugo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-en</language>
+    <lastBuildDate>Thu, 07 May 2020 18:03:45 +0200</lastBuildDate>
+    
+	<atom:link href="https://hug0vincent.github.io/tags/kernel/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hello Rootkitty</title>
+      <link>https://hug0vincent.github.io/2020/05/hello-rootkitty/</link>
+      <pubDate>Thu, 07 May 2020 18:03:45 +0200</pubDate>
+      
+      <guid>https://hug0vincent.github.io/2020/05/hello-rootkitty/</guid>
+      <description>Event Challenge Category Points Solves     ecsc Hello Rootkitty pwn 500 24    TL;DR A custom kernel module was vulnerable to a buffer overflow, with a small ropchain I escalated my privileges to root and with a sys_chmod syscalls I got the flag.
+Description    Recon I&amp;rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&amp;rsquo;ll do my best to summarize what I understood.</description>
+    </item>
+    
+  </channel>
+</rss>

