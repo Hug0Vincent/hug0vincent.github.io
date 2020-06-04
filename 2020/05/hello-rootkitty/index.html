@@ -372,7 +372,7 @@ Description    Recon I&rsquo;m not a Linux kernel expert, everything might not b
 
 <p>I&rsquo;m not a Linux kernel expert, everything might not be 100% correct, but I&rsquo;ll do my best to summarize what I understood.</p>
 
-<p>We were provided with 3 files, a bzImage, an iniramfs and a custom kernel module. I tried to run everything locally with qemu, but It didn&rsquo;t work the provided initramfs was broken, so let run the virtual machine on the server and see what happen.</p>
+<p>We were provided with 3 files, a bzImage, an iniramfs and a custom kernel module. I tried to run everything locally with qemu, but It didn’t work as the provided initramfs was broken, so let&rsquo;s run the virtual machine on the server and see what happens.</p>
 
 
  
@@ -507,7 +507,7 @@ total 0
 
 <p></br></p>
 
-<p>The module replaces the addresses of the original <span class="highlight-text orange">sys_getdents64</span>, <span class="highlight-text orange">sys_getdents</span> and <span class="highlight-text orange">sys_lstat</span> addresses by custom addresses which are function inside the module. The module is hooking legit function by a custom one. From the Linux man page we can read:</p>
+<p>The module replaces the addresses of the original <span class="highlight-text orange">sys_getdents64</span>, <span class="highlight-text orange">sys_getdents</span> and <span class="highlight-text orange">sys_lstat</span> addresses by custom addresses which are functions inside the module. The module is hooking legit function by a custom one. From the Linux man page we can read:</p>
 
 <blockquote class="pullquote ">
 	<p>
@@ -515,7 +515,7 @@ getdents, getdents64 - get directory entries
 </p>
 </blockquote>
 
-<p>When we want to list entry in a directory this syscall is made and instead of the original one the Linux kernel will call the custom one. Here is a part of the custom sys_getdents function:</p>
+<p>When we want to list entries in a directory this syscall is made and instead of the original one the Linux kernel will call the custom one. Here is a part of the custom sys_getdents function:</p>
 
 
  
@@ -560,7 +560,7 @@ getdents, getdents64 - get directory entries
   <div style="clear:both;"></div>
 
 
-<p>We can spot a <span class="highlight-text orange">strcpy</span> with only 2 parameters which mean a buffer overflow if we can control the second parameter. The second parameter comes from the second parameter of the sys_getdents function. Once again from the Linux man page:</p>
+<p>We can spot a <span class="highlight-text orange">strcpy</span> with only 2 parameters which means a buffer overflow if we can control the second parameter. The second parameter comes from the second parameter of the sys_getdents function. Once again from the Linux man page:</p>
 
 
   
@@ -629,7 +629,7 @@ int getdents64(unsigned int fd, struct linux_dirent64 *dirp,
   </table>
 </figure>
 
-<p>So at the offset 0x12 of a linux_dirent structure we can find the <span class="highlight-text orange">d_name</span> parameter. The little loop before the strcpy check that the name of the file start by <span class="highlight-text orange">ecsc_flag_</span>. We can try a buffer overflow with a long filename starting by ecsc_flag_ and see what append:</p>
+<p>So at the offset 0x12 of a linux_dirent structure we can find the <span class="highlight-text orange">d_name</span> parameter. The little loop before the strcpy checks that the name of the file starts by <span class="highlight-text orange">ecsc_flag_</span>. We can try a buffer overflow with a long filename starting by ecsc_flag_ and see what append:</p>
 
 
   
@@ -684,9 +684,9 @@ Rebooting in 1 seconds..</code></pre>
 
 <h1 id="ropping-through-hell">Ropping through hell</h1>
 
-<p>I though that it would be easy from here, but I actually spent a lot of time finding a good strategy to execute some privileges actions. My idea was initially to pop a root shell, let see the different steps to get there. First I tried to map a userland region as rwx and execute a custom shellcode from here, but I don&rsquo;t know why It didn&rsquo;t work. So I decided to make a ropchain.</p>
+<p>I though that it would be easy from here, but I actually spent a lot of time finding a good strategy to execute some privileged actions. My idea was initially to pop a root shell, let&rsquo;s see the different steps to get there. First I tried to map a userland region as rwx and execute a custom shellcode from there, but I don&rsquo;t know why It didn&rsquo;t work. So I decided to build a ropchain.</p>
 
-<p>To elevate our privileges in kernel-land we need to make a call to this functions:</p>
+<p>In order to elevate our privileges, we have to call these functions in kernel-land:</p>
 
 
   
@@ -713,9 +713,9 @@ Rebooting in 1 seconds..</code></pre>
   </table>
 </figure>
 
-<p>This will grant us root privileges which mean that we will theoretically be able to do whatever we want on the system. To call these functions we need to know their addresses, <span class="highlight-text orange">kaslr</span> is enabled, but we can read <span class="highlight-text orange">/proc/kallsym</span> which hold all the kernel function addresses including the base offset, thus defeating kaslr.</p>
+<p>This will grant us root privileges which means that we will theoretically be able to do whatever we want on the system. To call these functions we need to know their addresses, <span class="highlight-text orange">kaslr</span> is enabled, but we can read <span class="highlight-text orange">/proc/kallsym</span> which holds all the kernel function addresses and their current offset, thus defeating kaslr.</p>
 
-<p>Here is a usefull function to get kernel addresses base on the symbol name :</p>
+<p>Here is a useful function to get kernel addresses base on the symbol name :</p>
 
 
   
@@ -770,7 +770,7 @@ Rebooting in 1 seconds..</code></pre>
   </table>
 </figure>
 
-<p>We can now compute the addresses of those functions, but we need gadgets, and there are not so many gadgets inside the kernel module. To get more gadgets I extracted the vmlinux from the bzImage with this <a href="https://github.com/torvalds/linux/blob/master/scripts/extract-vmlinux">tool</a>. Then we can launch ROPgadet on the vmlinux and get a lot of gadgets. Here is the beginning of my ropchain:</p>
+<p>We can now compute the addresses of those functions, but we need gadgets, and there are not so many gadgets inside the kernel module. To get more gadgets I extracted the vmlinux from the bzImage with this <a href="https://github.com/torvalds/linux/blob/master/scripts/extract-vmlinux">tool</a>. Then we can launch ROPgadet on the vmlinux and get a lot of them. Here is the beginning of my ropchain:</p>
 
 
   
@@ -829,9 +829,9 @@ Rebooting in 1 seconds..</code></pre>
   </table>
 </figure>
 
-<p>After those gadget we will get root privileges, my naive idea was just to go back to a userland function and execute system(&ldquo;/bin/sh&rdquo;) but it didn&rsquo;t work I triggered segfault and I could only execute one printf and only one after that segfault.</p>
+<p>After those gadget are executed, we will get root privileges. My naive idea was just to go back to a userland function and execute system(&ldquo;/bin/sh&rdquo;) but it didn&rsquo;t work as expected. I triggered segfault and I could only execute one printf then it would failed with a segfault.</p>
 
-<p>I successfully execute a printf which means that I still can execute code but not everything. I tried to execute a custom minimal shellcode to call execve(&lsquo;/bin/sh&rsquo;) but without success. I was probably messing up with the kernel stack so I either had to restore it or find another solution. I tried in vain to restore it and I also tried to make a stack pivot but no sucess.</p>
+<p>I successfully executed a printf which means that I still can execute code but not for long. I tried to execute a custom minimal shellcode to call execve(&lsquo;/bin/sh&rsquo;) but without success. I was probably messing up with the kernel stack so I either had to restore it or find another solution. I tried in vain to restore it and I also tried to make a stack pivot but without sucess.</p>
 
 <p>I also tried to execute a call to exit after the ropchain, it worked but printf and exit are pretty useless in our case. But something is happening, we can still make at least one syscall, what can we do with one sycall ?</p>
 
@@ -918,7 +918,7 @@ Rebooting in 1 seconds..</code></pre>
 
 <h1 id="final-thought">Final thought</h1>
 
-<p>I saw other write-ups where people simply unload the kernel module and then print the flag which is more simple and less painful. I really wanted a root shell but I don&rsquo;t know why It didn&rsquo;t work since there is no SMEP or SMAP protection if someone has any idea please send me a message :)</p>
+<p>I saw other write-ups where people simply unloaded the kernel module and then printed the flag which is simpler and less painful. I really wanted a root shell but I don&rsquo;t know why It didn&rsquo;t work since there is no SMEP or SMAP protection if someone has any idea please send me a message :)</p>
 
 <h1 id="full-exploit">Full exploit</h1>
 
